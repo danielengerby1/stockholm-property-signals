@@ -6,70 +6,79 @@
 <title>Stockholm Property Signals</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f7f5;--panel:#ffffff;--ink:#1c1c1a;--muted:#6b6b66;--line:#e4e3de;--soft:#f0efea;
-  --accent:#2f5d8a;--pos:#2e7d4f;--neg:#b5452f;--warn:#a86b00;--chip:#eef2f6;
-  --radius:10px;font-synthesis:none;
+  --bg:#ffffff;--panel:#ffffff;--ink:#111111;--muted:#6e6e6e;--line:#e6e6e6;--soft:#f5f5f5;
+  --red:#e62b1e;--red-dark:#b81f14;--black:#111111;
+  --accent:#e62b1e;--pos:#111111;--neg:#e62b1e;--warn:#e62b1e;--chip:#fdecea;
+  --radius:2px;font-synthesis:none;
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#151514;--panel:#1e1e1c;--ink:#ecebe6;--muted:#9c9b94;--line:#33332f;--soft:#262624;
-  --accent:#7fb0de;--pos:#6cc28f;--neg:#e38a75;--warn:#e0b050;--chip:#26303a;}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-header{padding:18px 24px 0;max-width:1280px;margin:0 auto}
-h1{font-size:20px;margin:0 0 2px;letter-spacing:-.01em}
-.sub{color:var(--muted);margin:0 0 14px}
-nav{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto}
-nav button{background:none;border:0;padding:10px 14px;font:inherit;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
-nav button.on{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
-main{max-width:1280px;margin:0 auto;padding:18px 24px 60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 Inter,"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.topbar{background:var(--black);color:#fff}
+.topbar .in{max-width:1280px;margin:0 auto;padding:22px 24px 0;display:flex;flex-direction:column}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.brand .mark{background:var(--red);color:#fff;font-weight:900;font-size:13px;letter-spacing:.14em;padding:4px 8px;text-transform:uppercase}
+h1{font-size:30px;font-weight:900;margin:0;letter-spacing:-.025em;line-height:1.1}
+.sub{color:#bdbdbd;margin:8px 0 18px;max-width:760px}
+nav{display:flex;gap:0;overflow-x:auto}
+nav button{background:none;border:0;padding:12px 16px 11px;font:inherit;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a8a8a8;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav button:hover{color:#fff}
+nav button.on{color:#fff;border-bottom-color:var(--red)}
+main{max-width:1280px;margin:0 auto;padding:24px 24px 64px}
 section{display:none}section.on{display:block}
-.banner{background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--warn);padding:10px 14px;border-radius:8px;margin-bottom:16px}
-.banner b{color:var(--warn)}
-.grid{display:grid;gap:14px}
+.banner{background:var(--soft);border-left:4px solid var(--red);padding:12px 16px;margin-bottom:20px}
+.banner b{color:var(--red);text-transform:uppercase;letter-spacing:.06em;font-size:12.5px;margin-right:4px}
+.grid{display:grid;gap:16px}
 .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
-@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
-.card h3{margin:0 0 4px;font-size:15px}
-.card .hint{color:var(--muted);font-size:12.5px;margin:0 0 10px}
-.kpi .v{font-size:24px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.kpi .l{color:var(--muted);font-size:12.5px}
-.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
-.ctl label{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
-select,input[type=number],input[type=text],textarea{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 8px}
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}h1{font-size:24px}}
+.card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--black);border-radius:var(--radius);padding:18px}
+.card h3{margin:0 0 4px;font-size:16px;font-weight:800;letter-spacing:-.01em}
+.card .hint{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+.kpi{border-top-color:var(--red)}
+.kpi .v{font-size:32px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .l{color:var(--ink);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:6px}
+.ctl{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
+.ctl label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:6px}
+select,input[type=number],input[type=text],textarea{font:inherit;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid #cfcfcf;border-radius:var(--radius);padding:6px 8px;text-transform:none;letter-spacing:0;font-weight:500}
+select:focus,input:focus,textarea:focus{outline:2px solid var(--red);outline-offset:-1px;border-color:var(--red)}
 textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
-button.b{font:inherit;background:var(--accent);color:#fff;border:0;border-radius:7px;padding:7px 12px;cursor:pointer}
-button.b2{font:inherit;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 11px;cursor:pointer}
-button:disabled{opacity:.5;cursor:default}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer;user-select:none}
-.chip.on{background:var(--chip);border-color:var(--accent);color:var(--ink)}
+button.b{font:inherit;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;background:var(--red);color:#fff;border:0;border-radius:var(--radius);padding:9px 16px;cursor:pointer}
+button.b:hover{background:var(--red-dark)}
+button.b2{font:inherit;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fff;color:var(--black);border:1.5px solid var(--black);border-radius:var(--radius);padding:7px 13px;cursor:pointer}
+button.b2:hover{background:var(--black);color:#fff}
+button:disabled{opacity:.45;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{border:1.5px solid #d6d6d6;background:#fff;border-radius:999px;padding:3px 11px;font-size:12.5px;font-weight:600;cursor:pointer;user-select:none}
+.chip.on{background:var(--black);border-color:var(--black)!important;color:#fff}
 .chartbox{position:relative;height:340px}.chartbox.sm{height:260px}.chartbox.lg{height:420px}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
-th{color:var(--muted);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--panel);cursor:pointer}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+th{color:var(--ink);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.07em;position:sticky;top:0;background:#fff;cursor:pointer;border-bottom:2px solid var(--black)}
 td.n,th.n{text-align:right}
-.pos{color:var(--pos)}.neg{color:var(--neg)}.mut{color:var(--muted)}
+.pos{color:var(--ink);font-weight:600}.neg{color:var(--red);font-weight:600}.mut{color:var(--muted)}
 .scroll{max-height:460px;overflow:auto}
 .heat td{text-align:center;font-size:12px;padding:5px 4px;min-width:42px}
 .heat td:first-child{text-align:left;white-space:nowrap}
-pre{background:var(--soft);border:1px solid var(--line);border-radius:7px;padding:10px;overflow:auto;font-size:12px;margin:6px 0}
-.drop{border:1.5px dashed var(--line);border-radius:9px;padding:14px;text-align:center;color:var(--muted)}
-.drop.over{border-color:var(--accent);background:var(--chip)}
+pre{background:var(--soft);border-left:3px solid var(--black);padding:10px;overflow:auto;font-size:12px;margin:6px 0}
+.drop{border:2px dashed #cfcfcf;padding:18px;text-align:center;color:var(--muted)}
+.drop.over{border-color:var(--red);background:var(--chip)}
 .status{font-size:12.5px;color:var(--muted);margin-top:6px;min-height:18px}
 .note{font-size:12.5px;color:var(--muted)}
-.pill{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}
-a{color:var(--accent)}
-.toast{position:fixed;right:16px;bottom:16px;background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
-.toast.on{opacity:.95}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:1px 7px;background:var(--soft);border:1px solid var(--line)}
+a{color:var(--red);font-weight:600}
+.toast{position:fixed;right:16px;bottom:16px;background:var(--black);color:#fff;border-left:4px solid var(--red);padding:10px 16px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:.97}
 td input[type=number]{width:64px;padding:2px 4px}
-.verdict{padding:10px 12px;border-radius:8px;background:var(--soft);border:1px solid var(--line);margin-top:10px}
+.verdict{padding:12px 14px;background:var(--soft);border-left:4px solid var(--black);margin-top:12px}
+.verdict b{color:var(--red)}
 </style>
 </head>
 <body>
-<header>
-  <h1>Stockholm Property Signals</h1>
+<header class="topbar"><div class="in">
+  <div class="brand"><span class="mark">Stockholm</span><h1>Property Signals</h1></div>
   <p class="sub">Neighbourhood prices × local news, police incidents, planning and macro — lagged correlations and price forecasts.</p>
   <nav id="tabs">
     <button data-t="overview" class="on">Overview</button>
@@ -79,7 +88,7 @@ td input[type=number]{width:64px;padding:2px 4px}
     <button data-t="fc">Forecast</button>
     <button data-t="data">Data &amp; sources</button>
   </nav>
-</header>
+</div></header>
 <main>
   <div id="demoBanner" class="banner"><b>Demo data.</b> The prices and headlines loaded now are synthetic, generated for illustration. A news→price effect with a 4-month lag is deliberately built in so the analysis has something to find. Import your own data in <a href="#data" data-goto="data">Data &amp; sources</a> to analyse real prices.</div>
 
@@ -296,7 +305,7 @@ const POLICE_W = {"skottlossning":-1,"skottlossning, misstänkt":-.8,"mord/dråp
  "våld/hot mot tjänsteman":-.5,"olaga hot":-.4,"ofredande/förargelse":-.3,"skadegörelse":-.3,"bråk":-.3,"knivlagen":-.4,"vapenlagen":-.6,"övrigt":-.1};
 const POLICE_SKIP = /sammanfattning|försvunnen|kontroll person|fylleri|trafikkontroll|räddningsinsats|uppdatering|övrigt\s*$/i;
 const PLAN_RX = /(detaljplan|bygg|tunnelban|spårväg|pendeltåg|exploater|stadsutveckl|nya bostäder|förskol|skola|park|infrastruktur|station|kvarter|stadsdel ska|planer)/;
-const COLORS = ["#2f5d8a","#c0612b","#3f8f5a","#8a3f7a","#b59a1f","#3a8a8f","#a3423f","#5b5fb0","#6f8f2f","#8f5a2f","#2f8a75","#9a3fa3","#4f7fbf","#bf6f4f","#4f9f7f","#7f4fbf","#af8f3f","#3f6faf","#cf5f7f","#5faf4f","#8f6f9f","#3f9faf","#bf8f5f","#6f6f6f"];
+const COLORS = ["#e62b1e","#111111","#8a8a8a","#f28b82","#4d4d4d","#9e1b12","#c4c4c4","#2b4c7e","#d4862a","#3d7f6e","#7a4e9c","#5f6b2f","#c2185b","#2f6f8f","#a66a3f","#556070","#e0a19b","#303030","#b55a52","#6f8fa8","#9c8b4a","#7d3c3c","#4a7a4a","#a0a0a0"];
 
 /* ================= state ================= */
 const S = {areas:[], aliases:{}, prices:[], news:[], macro:[], demo:false};
@@ -454,7 +463,7 @@ let pSel=null;
 function renderPrices(){
   const D=derive(); if(!pSel) pSel=new Set(D.areas.filter(a=>["Östermalm","Södermalm","Hammarby sjöstad","Rinkeby-Kista","Solna","Bromma"].includes(a)).concat(D.areas.slice(0,0)));
   if(!pSel.size) D.areas.slice(0,5).forEach(a=>pSel.add(a));
-  $("pChips").innerHTML=D.areas.map(a=>`<span class="chip ${pSel.has(a)?"on":""}" data-a="${esc(a)}" style="${pSel.has(a)?`border-color:${areaColor(a)}`:""}">${esc(a)}</span>`).join("");
+  $("pChips").innerHTML=D.areas.map(a=>`<span class="chip ${pSel.has(a)?"on":""}" data-a="${esc(a)}">${pSel.has(a)?`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${areaColor(a)};box-shadow:0 0 0 1.5px #fff"></span>`:""}${esc(a)}</span>`).join("");
   const fromSel=$("pFrom"); if(fromSel.options.length!==Math.ceil(D.T/12)){ const yrs=[...new Set(D.months.map(m=>m.slice(0,4)))]; const cur=fromSel.value; fromSel.innerHTML=yrs.map(y=>`<option>${y}</option>`).join(""); fromSel.value=cur&&yrs.includes(cur)?cur:yrs[0]; }
   const mode=$("pMode").value, smooth=$("pSmooth").checked; const from=D.months.findIndex(m=>m.startsWith(fromSel.value)); const i0=Math.max(0,from);
   const labels=D.months.slice(i0);
@@ -490,7 +499,7 @@ function renderNews(){
   const ds=[{type:"bar",label:"Positive items",data:pos,backgroundColor:css("--pos"),stack:"s"},{type:"bar",label:"Negative items",data:neg,backgroundColor:css("--neg"),stack:"s"},
     {type:"line",label:"Net sentiment, 3-month avg",data:net.map((v,i)=>i>=2?(net[i]+net[i-1]+net[i-2])/3:null),borderColor:css("--ink"),pointRadius:0,borderWidth:1.6,yAxisID:"y"}];
   if(a && a!=="__none" && D.P[a]){ const r=D.P[a].sm.map((v,i)=>v!=null&&D.P[a].sm[i-12]!=null?(v/D.P[a].sm[i-12]-1)*100:null); const pm=Object.fromEntries(D.months.map((m,i)=>[m,r[i]]));
-    ds.push({type:"line",label:`${a} price, 12-month change %`,data:months.map(m=>pm[m]??null),borderColor:css("--accent"),borderDash:[5,3],pointRadius:0,borderWidth:1.8,yAxisID:"y2",spanGaps:true}); }
+    ds.push({type:"line",label:`${a} price, 12-month change %`,data:months.map(m=>pm[m]??null),borderColor:css("--red"),borderDash:[5,3],pointRadius:0,borderWidth:1.8,yAxisID:"y2",spanGaps:true}); }
   mkChart("cNews",{data:{labels:months,datasets:ds},options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{boxWidth:12}}},
     scales:{x:{stacked:true,ticks:{maxTicksLimit:12}},y:{stacked:true,title:{display:true,text:"items per month"}},y2:{display:ds.length>3,position:"right",grid:{display:false},ticks:{callback:v=>v+"%"}}}}});
   const show=items.slice(0,300);
@@ -532,7 +541,7 @@ function renderCorr(){
   const L=+lagSel.value; const row=cc&&cc.rows.find(r=>r.lag===L);
   const pts=row? row.xs.map((x,i)=>({x,y:row.ys[i]})).filter((_,i)=>i%Math.ceil(row.xs.length/1500||1)===0):[];
   let fit=null; if(row&&row.r!=null){ const xs=pts.map(p=>p.x); const lo=Math.min(...xs),hi=Math.max(...xs); fit=[{x:lo,y:row.r*lo},{x:hi,y:row.r*hi}]; }
-  mkChart("cScatter",{type:"scatter",data:{datasets:[{data:pts,pointRadius:2,backgroundColor:css("--accent")+"55",borderColor:"transparent"},...(fit?[{type:"line",data:fit,borderColor:css("--neg"),pointRadius:0,borderWidth:2}]:[])]},
+  mkChart("cScatter",{type:"scatter",data:{datasets:[{data:pts,pointRadius:2,backgroundColor:"#11111140",borderColor:"transparent"},...(fit?[{type:"line",data:fit,borderColor:css("--neg"),pointRadius:0,borderWidth:2}]:[])]},
     options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{title:{display:true,text:"signal (z)"}},y:{title:{display:true,text:`next ${H}-month price change (z)`}}}}});
   const lbl=$("kSig").selectedOptions[0].textContent; $("kVerdict").innerHTML=verdictText(cc,lbl+(area==="__all"?" (all areas pooled)":` (${area})`));
   // heat table
@@ -540,7 +549,7 @@ function renderCorr(){
   const pc=css("--pos"), nc=css("--neg");
   $("kHeat").innerHTML=`<tr><th>Area</th>${lagsShow.map(l=>`<th class="n">${l>0?"+":""}${l}</th>`).join("")}<th class="n">items</th></tr>`+tbl.map(([a,c],k)=>{ const cnt=a.startsWith("All")?S.news.filter(n=>n.area).length:S.news.filter(n=>n.area===a).length;
     return `<tr${k===0?' style="font-weight:600"':""}><td>${esc(a)}</td>${lagsShow.map(l=>{ const r=c&&c.rows.find(x=>x.lag===l); const v=r&&r.r; if(v==null) return `<td class="mut">–</td>`; const al=Math.min(1,Math.abs(v)/0.5); const sig=Math.abs(v)>r.band;
-      return `<td style="background:${(v>0?pc:nc)}${Math.round(al*160).toString(16).padStart(2,"0")}${sig?";font-weight:700":""}">${v.toFixed(2)}</td>`; }).join("")}<td class="n mut">${fmt(cnt)}</td></tr>`; }).join("");
+      return `<td style="background:${(v>0?pc:nc)}${Math.round(al*(v>0?95:150)).toString(16).padStart(2,"0")}${sig?";font-weight:700":""}">${v.toFixed(2)}</td>`; }).join("")}<td class="n mut">${fmt(cnt)}</td></tr>`; }).join("");
 }
 
 /* ================= forecast model ================= */
@@ -614,7 +623,7 @@ function renderForecast(run){
   $("fTitle").textContent=`${area}: ${pct(f[H-1].p50/anchor-1)} expected over ${H} months`;
   mkChart("cFc",{type:"line",data:{labels,datasets:[
     {label:"Actual (3-m smoothed)",data:sm.concat(new Array(H).fill(null)),borderColor:css("--ink"),pointRadius:0,borderWidth:2},
-    {label:"90th pct",data:pad.concat([anchor],f.map(x=>x.p90)),borderColor:"transparent",backgroundColor:css("--accent")+"33",pointRadius:0,fill:"+1"},
+    {label:"90th pct",data:pad.concat([anchor],f.map(x=>x.p90)),borderColor:"transparent",backgroundColor:"#e62b1e26",pointRadius:0,fill:"+1"},
     {label:"10th pct",data:pad.concat([anchor],f.map(x=>x.p10)),borderColor:"transparent",pointRadius:0,fill:false},
     {label:"Median forecast",data:pad.concat([anchor],f.map(x=>x.p50)),borderColor:css("--accent"),borderDash:[6,4],pointRadius:0,borderWidth:2}]},
     options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{boxWidth:12,filter:i=>!i.text.includes("pct")}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.raw)} kr/kvm`}}},scales:{x:{ticks:{maxTicksLimit:12}},y:{ticks:{callback:v=>fmt(v/1000)+"k"}}}}});
@@ -625,7 +634,7 @@ function renderForecast(run){
       : `News signals made the forecast <b>slightly worse</b> (${(imp*100).toFixed(1)}%) on unseen data — likely noise. Try another lag, or add more news.`;
   } else { $("fBack").innerHTML=""; $("fVerdict").textContent="Need at least ~5 years of prices to backtest."; }
   const coef=model.beta.map((b,j)=>b*100);
-  mkChart("cCoef",{type:"bar",data:{labels:FEAT_NAMES.map((n,j)=>j>=6?n.replace("lagged",lag+" m"):n),datasets:[{data:coef,backgroundColor:coef.map((v,j)=>j>=6?(v>0?css("--pos"):css("--neg")):css("--accent")+"aa")}]},
+  mkChart("cCoef",{type:"bar",data:{labels:FEAT_NAMES.map((n,j)=>j>=6?n.replace("lagged",lag+" m"):n),datasets:[{data:coef,backgroundColor:coef.map((v,j)=>j>=6?(v>0?css("--pos"):css("--neg")):"#9a9a9a")}]},
     options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw>0?"+":""}${c.raw.toFixed(3)} pp per month`}}},scales:{x:{ticks:{callback:v=>v.toFixed(2)}},y:{ticks:{font:{size:11}}}}}});
   const rows=D.areas.map(a=>{ const an=D.P[a].sm[T-1], ff=sims[a][H-1]; return {a,now:an,mid:ff.p50/an-1,lo:ff.p10/an-1,hi:ff.p90/an-1,price:ff.p50}; });
   FC.rows=rows;
@@ -782,7 +791,6 @@ $("aliasSave").onclick=()=>{ const lines=$("aliasBox").value.split("\n").map(l=>
 /* ================= boot ================= */
 setAliases(DEFAULT_AREAS); genDemo(); updRssVis();
 const h0=location.hash.slice(1); show(h0&&$(h0)&&$(h0).tagName==="SECTION"?h0:"overview"); renderSummary();
-window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",renderCurrent);
 initCaps();
 </script>
 </body>
