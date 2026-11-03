@@ -12,6 +12,15 @@ All data here comes from free, openly published sources. It was fetched on 2026-
 
 All of this data is also built into `index.html`, and the app loads it by default. The aggregates "Stockholm" and "Centrala Stockholm" are left out of the analysis so that areas aren't double-counted.
 
+## Neighbourhood profiles
+| File | Source | Contents |
+|---|---|---|
+| `area_profiles_stats.json` | Computed | Per-area figures shown in the app. |
+| `scb_area_stats_raw.json` | [SCB PxWeb API v2](https://api.scb.se/ov0104/v2beta/api/v2/) | Raw figures from SCB tables TAB6574 (age, 2025 and 2015), TAB6568 (households), TAB6065 (house type), TAB6253 (tenure), TAB6540 (building age), TAB6534 (education) and TAB5750 (median disposable income for ages 20–64, 2023). |
+| `regso_to_district_map.json` | Own mapping | Which of Stockholm's 127 RegSO small areas belong to each Mäklarstatistik district. Based on parish (församling) boundaries, the same grouping Stockholm's polling districts use. |
+| `election_2026_riksdag_by_area.json` | [Valmyndigheten](https://resultat.val.se/val2026) | Final Riksdag 2026 results with 2022 votes. Stockholm polling districts are grouped by parish prefix; 6 collection districts (uppsamlingsdistrikt) can't be placed and are left out. Municipalities use their full totals. |
+| `area_profiles_text.json` | Written by Claude | Overview text per area (character, who it suits, local scene, what's changing), based on the figures above and general knowledge. Not official descriptions. |
+
 ## Refreshing the data
 Mäklarstatistik updates around the 8th of each month. Open their Stockholm page in a browser, paste `fetch_maklarstatistik.js` into the developer console and press Enter. The script downloads fresh CSV files, which you then drop into the app.
 

@@ -1,0 +1,177 @@
+{
+ "Östermalm": {
+  "includes": "Östermalm, Gärdet, Hjorthagen, Norra Djurgårdsstaden, Lärkstaden, Djurgården",
+  "summary": "Stockholm's most prestigious inner-city district: grand stone buildings from the late 1800s and early 1900s along Strandvägen, Karlavägen and around Östermalmstorg, with 1930s functionalist blocks on Gärdet.",
+  "goodFor": "Established professionals and older households who want central, classic apartments; families who value Djurgården and the parks but can afford large flats.",
+  "scene": "Upscale restaurants, Östermalms saluhall, boutiques and the Stureplan nightlife hub. Djurgården and Gärdet give it some of the city's best green space.",
+  "changing": "Norra Djurgårdsstaden (Hjorthagen/Värtahamnen) is one of Stockholm's largest new-build areas and adds modern apartments to an otherwise old building stock."
+ },
+ "Vasastan-Norrmalm": {
+  "includes": "Vasastan, Odenplan, Sankt Eriksplan, Norrmalm/City, Gamla stan",
+  "summary": "Dense, classic inner city: almost all buildings date from before 1940, mostly 1880–1930 apartment blocks around Odenplan, Sankt Eriksplan and Vasaparken, plus the commercial city centre and Gamla stan.",
+  "goodFor": "Young professionals and couples who want to walk everywhere; works for families who accept smaller flats and use the parks (Vasaparken, Observatorielunden).",
+  "scene": "One of the city's densest restaurant, bar and café scenes, especially around Odenplan, Rörstrandsgatan and Upplandsgatan; shopping on Drottninggatan and around Hötorget.",
+  "changing": "Very little new building, so supply stays tight. The new Odenplan station and Hagastaden next door have strengthened the area. Prices are up about 26% since 2022, on a par with Södermalm as the strongest growth here."
+ },
+ "Kungsholmen": {
+  "includes": "Kungsholmen, Fridhemsplan, Fredhäll, Kristineberg, Stadshagen, Marieberg, Hornsbergs strand",
+  "summary": "An island district west of the city centre, mostly 1920s–30s buildings, with long waterfront promenades along Norr Mälarstrand and Rålambshovsparken.",
+  "goodFor": "Professionals and couples who want central living but a calmer feel than Södermalm; families like Fredhäll, Kristineberg and the parks.",
+  "scene": "A good restaurant and café scene around Fridhemsplan, Hantverkargatan and Sankt Eriksgatan, but quieter nightlife than Söder or Stureplan.",
+  "changing": "Waterfront new builds at Hornsbergs strand, Lindhagen and Kristineberg strand have been added since the 2000s; otherwise a stable, fully built-out district."
+ },
+ "Essingen": {
+  "includes": "Stora Essingen, Lilla Essingen",
+  "summary": "Two small islands in Lake Mälaren, with 1930s–40s functionalist apartment blocks and a villa area on Stora Essingen. Quiet and green, with water on all sides.",
+  "goodFor": "Couples, families and older residents who want a calm, almost suburban feel minutes from Kungsholmen.",
+  "scene": "Very limited — a few local cafés. People go to Kungsholmen or Liljeholmen for restaurants. The Essingeleden motorway runs through the area.",
+  "changing": "Little new building. With fewer than 10,000 residents and few sales, price statistics are noisy."
+ },
+ "Södermalm": {
+  "includes": "Södermalm, Hornstull, Mariatorget, Medborgarplatsen, SoFo, Skanstull, Hammarby sjöstad, Långholmen, Reimersholme",
+  "summary": "Stockholm's creative heart: turn-of-the-century apartment blocks on a hilly island, plus the 2000s eco-district Hammarby sjöstad. The largest district by population.",
+  "goodFor": "Young adults, creatives and couples; families do well too, especially around Vita bergen and Hammarby sjöstad.",
+  "scene": "The liveliest bar, restaurant, vintage and music scene in the city — SoFo, Hornstull, Mariatorget and Medborgarplatsen. Tantolunden and Vitabergsparken are big summer hangouts.",
+  "changing": "The long-running Slussen rebuild is reshaping the northern edge, and Hammarby sjöstad keeps growing to the east. Prices are up about 26% since 2022, the strongest of the 25 areas."
+ },
+ "Bromma-Västerled": {
+  "includes": "Bromma, Alvik, Abrahamsberg, Äppelviken, Ålsten, Nockeby, Traneberg, Ulvsunda, Blackeberg",
+  "summary": "Stockholm's classic garden suburb: 1920s–40s villa areas (Äppelviken, Ålsten, Nockeby, Smedslätten, Olovslund) mixed with apartment blocks around Alvik, Brommaplan and the metro.",
+  "goodFor": "Families with children — one of the most family-oriented parts of the city, with houses, gardens, good schools and the Mälaren shoreline.",
+  "scene": "Calm and residential. Local centres at Alvik, Brommaplan and Bromma Blocks; few late-night venues.",
+  "changing": "New apartment districts are growing around Ulvsunda, Alvik and the Tvärbanan tram line. The long-running debate about the future of Bromma airport could change the area over time."
+ },
+ "Hässelby-Vällingby": {
+  "includes": "Vällingby, Råcksta, Grimsta, Kälvesta, Nälsta, Vinsta, Hässelby Gård, Hässelby Strand, Hässelby Villastad",
+  "summary": "Outer western suburbs built mainly in the 1950s–70s around Vällingby centrum, the internationally known 1950s model 'ABC suburb', plus the large Hässelby villa area.",
+  "goodFor": "Families who want more space for the money, nature (Grimsta forest, Mälaren beaches) and the green metro line into town.",
+  "scene": "Local and low-key, centred on Vällingby centrum. Little nightlife.",
+  "changing": "Bostadsrätt prices have fallen about 16% since autumn 2022 according to Mäklarstatistik — the weakest development of all 25 areas. Some of this may reflect which types of homes happened to sell. Population has been fairly stable."
+ },
+ "Spånga-Kista": {
+  "includes": "Kista, Husby, Akalla, Rinkeby, Tensta, Hjulsta, Spånga, Solhem, Bromsten, Sundby",
+  "summary": "A district of contrasts: Kista Science City (one of Europe's major tech clusters), Million Programme estates from the 1960s–70s in Rinkeby, Tensta, Husby and Akalla, and older villa areas in Spånga, Solhem and Bromsten.",
+  "goodFor": "First-time buyers looking for the lowest prices in the city; tech workers near Kista; families in the Spånga villa areas.",
+  "scene": "Kista Galleria and the area's food stalls and restaurants. Little nightlife; the Järva field offers large green spaces.",
+  "changing": "The youngest and most diverse district, with the lowest incomes. Parts of Järva have long struggled with gang crime and segregation, and large public investments in renewal and new housing are under way. Bostadsrätt prices are down about 9% since 2022."
+ },
+ "Hägersten-Liljeholmen": {
+  "includes": "Liljeholmen, Aspudden, Midsommarkransen, Telefonplan, Hägerstensåsen, Mälarhöjden, Gröndal, Västberga",
+  "summary": "Popular inner suburbs just south-west of Södermalm: 1930s–40s apartment blocks in Aspudden and Midsommarkransen, villas in Mälarhöjden and modern waterfront blocks at Liljeholmskajen.",
+  "goodFor": "Young families and couples priced out of the inner city — one of Stockholm's main 'next step' areas, with a short commute via the red line and Tvärbanan.",
+  "scene": "A strong local café and restaurant scene in Aspudden, Midsommarkransen and Telefonplan (home of Konstfack), plus the Liljeholmen shopping hub.",
+  "changing": "Liljeholmen has been transformed by 2000s–2010s new builds. Prices are up about 15% since 2022, the highest of the inner suburbs."
+ },
+ "Brännkyrka-Skärholmen": {
+  "includes": "Älvsjö, Långbro, Herrängen, Solberga, Örby slott, Östberga, Västertorp, Fruängen, Skärholmen, Bredäng, Vårberg, Sätra",
+  "summary": "A mixed southern district: villa and garden-city areas in Älvsjö, Långbro and Herrängen, 1950s neighbourhood units in Västertorp and Fruängen, and Million Programme estates in Skärholmen, Bredäng, Vårberg and Sätra.",
+  "goodFor": "Families who want a house (Älvsjö area) or an affordable apartment with lake access (Bredäng, Sätra).",
+  "scene": "Skärholmen centrum is a large regional shopping hub, and Stockholmsmässan is in Älvsjö. Otherwise residential.",
+  "changing": "A large spread between the villa areas and the estates. Prices are up about 7% since 2022."
+ },
+ "Enskede-Skarpnäck": {
+  "includes": "Gamla Enskede, Enskededalen, Enskede gård, Årsta, Johanneshov, Gullmarsplan, Hammarbyhöjden, Björkhagen, Kärrtorp, Bagarmossen, Skarpnäck",
+  "summary": "Green southern suburbs: the early-1900s garden city of Gamla Enskede, 1930s–50s blocks in Årsta, Hammarbyhöjden and Kärrtorp, and Skarpnäck's 1980s 'city block' plan.",
+  "goodFor": "Families and couples who want greenery, short commutes on the green line and a slightly bohemian suburban feel (Bagarmossen, Kärrtorp).",
+  "scene": "The Avicii Arena and arenas around Globen; a growing local food and café scene in Bagarmossen, Kärrtorp and Årsta.",
+  "changing": "Redevelopment around the Globen area and Slakthusområdet (the former meatpacking district) will add housing, restaurants and culture over the coming years."
+ },
+ "Farsta-Vantör": {
+  "includes": "Farsta, Farsta strand, Hökarängen, Gubbängen, Sköndal, Svedmyra, Tallkrogen, Stureby, Högdalen, Rågsved, Hagsätra, Bandhagen, Örby",
+  "summary": "Southern suburbs from the 1940s–60s along the green line: Farsta centrum (one of Sweden's first big suburban shopping centres), small garden-city areas in Tallkrogen, Stureby and Svedmyra, and apartment blocks in Högdalen, Rågsved and Hagsätra.",
+  "goodFor": "Families and first-time buyers looking for affordable homes with nature nearby (Magelungen, Flaten, Nackareservatet).",
+  "scene": "Local and modest. Hökarängen has a small, well-liked café and culture scene; Farsta centrum covers shopping.",
+  "changing": "The planned blue-line metro extension south via Gullmarsplan towards Hagsätra is the big long-term change. Prices are roughly flat since 2022."
+ },
+ "Solna": {
+  "includes": "Råsunda, Hagalund, Frösunda, Arenastaden, Bergshamra, Huvudsta, Ulriksdal",
+  "summary": "A compact, fast-growing city just north of Stockholm: Arenastaden (national arena and Mall of Scandinavia), Karolinska Institutet, Haga park and a large share of buildings from after 2000.",
+  "goodFor": "Young professionals and couples who want modern apartments and short commutes; families near Haga, Ulriksdal and Bergshamra.",
+  "scene": "Events and shopping at Arenastaden, and restaurants around Råsunda. Most nightlife is in central Stockholm.",
+  "changing": "One of the most expansive areas around Stockholm, with many large employers and the new yellow metro line (Odenplan–Arenastaden) under construction."
+ },
+ "Sundbyberg": {
+  "includes": "Sundbyberg centrum, Hallonbergen, Rissne, Duvbo, Ursvik",
+  "summary": "Sweden's smallest and densest municipality: an old industrial town with a lively centre, plus large new districts such as Ursvik. More than a third of residential buildings are from after 2000.",
+  "goodFor": "Young adults and young families who want city life at somewhat lower prices than the inner city; quick commuter-train and metro links.",
+  "scene": "A popular restaurant and bar strip around Sundbybergs torg and Stationsgatan, with a small-town 'Sumpan' identity.",
+  "changing": "Rapid population growth and new building. Prices are up about 12% since 2022."
+ },
+ "Nacka": {
+  "includes": "Sickla, Nacka strand, Kvarnholmen, Finntorp, Järla, Ektorp, Saltsjöbaden, Fisksätra, Orminge, Älta, Boo",
+  "summary": "A large municipality east of Södermalm, split between villa areas (about 40% of residents own their home) and new urban districts such as Sickla, Kvarnholmen and Nacka strand. Plenty of nature and waterfront.",
+  "goodFor": "Families — one of the most child-rich areas in the region — and nature lovers (Nackareservatet, archipelago access). Saltsjöbaden is a classic upscale villa area.",
+  "scene": "Sickla is the main restaurant and shopping hub, and Kvarnholmen and Nacka strand have waterfront dining. Otherwise suburban.",
+  "changing": "A large new 'Nacka stad' around Nacka centrum is being built alongside the planned blue-line metro extension to Nacka."
+ },
+ "Lidingö": {
+  "includes": "Lidingö centrum, Torsvik, Larsberg, Käppala, Skärsätra",
+  "summary": "An affluent island municipality just north-east of the city: mostly villas and large apartments, plenty of forest and shoreline, and known for Lidingöloppet.",
+  "goodFor": "Families and older, established households who want space, nature and quiet. Few young adults live here.",
+  "scene": "Quiet. A few local restaurants; residents head into Östermalm for nightlife via Ropsten.",
+  "changing": "Stable and largely built out; Lidingöbanan light rail links to Ropsten and the red line. Prices are up about 16% since 2022."
+ },
+ "Danderyd": {
+  "includes": "Djursholm, Stocksund, Enebyberg, Mörby",
+  "summary": "Sweden's highest-income municipality: classic villa towns (Djursholm was founded in the 1890s) and two-thirds of residents in houses.",
+  "goodFor": "Families with children and high incomes; strong schools and short commutes via Roslagsbanan and the red line.",
+  "scene": "Very quiet and residential; Mörby centrum for everyday shopping.",
+  "changing": "Very little new building and limited supply. Price levels are high but growth has been moderate (about 12% since 2022)."
+ },
+ "Täby": {
+  "includes": "Täby centrum, Näsby park, Viggbyholm, Roslags Näsby, Arninge",
+  "summary": "A northern commuter municipality built mainly in the 1970s–80s, with villas and townhouses and a large regional shopping centre (Täby Centrum).",
+  "goodFor": "Families with children who want a house, good schools and Roslagsbanan into town.",
+  "scene": "Shopping-centre based; little nightlife.",
+  "changing": "The area around Täby Centrum and Arninge is being densified with new apartments."
+ },
+ "Sollentuna": {
+  "includes": "Sollentuna centrum, Häggvik, Rotebro, Tureberg, Edsberg, Helenelund",
+  "summary": "A northern commuter suburb along the E4 and the commuter-train line, with half of residents in villas and townhouses from the 1960s–80s.",
+  "goodFor": "Families who want a house and fast commuter trains to the city and Arlanda.",
+  "scene": "Local centres only; quiet.",
+  "changing": "Gradual densification near the stations. Prices are roughly flat since 2022."
+ },
+ "Järfälla": {
+  "includes": "Jakobsberg, Barkarby, Kallhäll, Viksjö",
+  "summary": "A north-western municipality built mainly in the 1960s–70s, now being reshaped by Barkarbystaden, a large new urban district.",
+  "goodFor": "Families and first-time buyers looking for newer apartments at lower prices than the city.",
+  "scene": "Shopping at Barkarby; otherwise suburban.",
+  "changing": "The blue-line metro extension to Barkarby, and thousands of new homes in Barkarbystaden, are the main changes. A large supply of new apartments may be weighing on prices (about −3% since 2022)."
+ },
+ "Huddinge": {
+  "includes": "Flemingsberg, Stuvsta, Segeltorp, Skogås, Trångsund, Vårby",
+  "summary": "A large southern municipality: more than half of residents live in villas, plus Flemingsberg with Karolinska University Hospital Huddinge and Södertörn University.",
+  "goodFor": "Families who want a house, nature and lakes (Gömmaren, Orlången), and commuter trains to the city.",
+  "scene": "Mostly local; little nightlife.",
+  "changing": "Flemingsberg is planned as a regional centre with new housing and offices. Bostadsrätt prices are down about 4% since 2022."
+ },
+ "Botkyrka": {
+  "includes": "Tumba, Tullinge, Alby, Fittja, Hallunda, Norsborg",
+  "summary": "A south-western municipality ranging from the villa areas of Tullinge and Tumba to Million Programme estates in Alby, Fittja, Hallunda and Norsborg.",
+  "goodFor": "Families looking for affordable houses (Tullinge, Tumba) and buyers looking for some of the region's lowest apartment prices.",
+  "scene": "Local; Hallunda and Tumba centres for shopping.",
+  "changing": "Lower incomes and turnout than the regional average, with ongoing renewal programmes. Bostadsrätt prices are down about 6% since 2022."
+ },
+ "Haninge": {
+  "includes": "Handen, Jordbro, Brandbergen, Vendelsö, Västerhaninge, plus archipelago areas",
+  "summary": "A large southern municipality stretching from the commuter-train town of Handen to the archipelago (Dalarö, Utö). Close to half of residents live in villas.",
+  "goodFor": "Families who want space and archipelago access at moderate prices.",
+  "scene": "Local, centred on Handen.",
+  "changing": "New building around Handen station and Vega. Prices are flat since 2022."
+ },
+ "Tyresö": {
+  "includes": "Tyresö centrum, Trollbäcken, Bollmora",
+  "summary": "A green villa municipality south-east of the city, next to Tyresta National Park and with lots of shoreline.",
+  "goodFor": "Families and nature lovers. Note: there's no rail link, so commuting is by bus.",
+  "scene": "Quiet; Tyresö centrum for shopping.",
+  "changing": "Stable and residential; prices are flat since 2022."
+ },
+ "Värmdö": {
+  "includes": "Gustavsberg, Hemmesta, Ingarö",
+  "summary": "An archipelago municipality east of Nacka: more than 70% of residents live in houses, many of them former summer homes converted for year-round living. Gustavsberg has a historic porcelain-factory harbour.",
+  "goodFor": "Families who want sea, nature and a house; commuting is by bus or car.",
+  "scene": "Seasonal and local; Gustavsberg harbour has restaurants in summer.",
+  "changing": "Steady population growth as summer homes convert to permanent homes. Bostadsrätt prices are flat since 2022."
+ }
+}
