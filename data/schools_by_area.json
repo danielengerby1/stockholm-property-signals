@@ -1,0 +1,601 @@
+{
+ "Farsta-Vantör": {
+  "schools": 25,
+  "g9_schools": 10,
+  "merit": 232,
+  "eligible": 70,
+  "salsa_dev": 4.0,
+  "top": [
+   [
+    "Sturebyskolan",
+    255,
+    86
+   ],
+   [
+    "Internationella Engelska Skolan Enskede",
+    254,
+    77
+   ],
+   [
+    "Martinskolan Söders waldorfskola",
+    252,
+    75
+   ]
+  ]
+ },
+ "Brännkyrka-Skärholmen": {
+  "schools": 25,
+  "g9_schools": 14,
+  "merit": 235,
+  "eligible": 69,
+  "salsa_dev": 14.0,
+  "top": [
+   [
+    "Grundskolan Metapontum",
+    275,
+    96
+   ],
+   [
+    "Johan Skytteskolan",
+    271,
+    93
+   ],
+   [
+    "Internationella Engelska Skolan Älvsjö",
+    267,
+    85
+   ]
+  ]
+ },
+ "Spånga-Kista": {
+  "schools": 29,
+  "g9_schools": 16,
+  "merit": 231,
+  "eligible": 64,
+  "salsa_dev": 23.6,
+  "top": [
+   [
+    "Spånga grundskola",
+    270,
+    87
+   ],
+   [
+    "Kunskapsskolan Spånga",
+    266,
+    91
+   ],
+   [
+    "Ellen Key skolan",
+    262,
+    85
+   ]
+  ]
+ },
+ "Östermalm": {
+  "schools": 18,
+  "g9_schools": 9,
+  "merit": 289,
+  "eligible": 93,
+  "salsa_dev": 32.3,
+  "top": [
+   [
+    "Fredrikshovs slotts skola",
+    311,
+    94
+   ],
+   [
+    "Carlssons skola",
+    302,
+    98
+   ],
+   [
+    "Campus Manilla",
+    301,
+    96
+   ]
+  ]
+ },
+ "Hägersten-Liljeholmen": {
+  "schools": 19,
+  "g9_schools": 10,
+  "merit": 242,
+  "eligible": 73,
+  "salsa_dev": -1.9,
+  "top": [
+   [
+    "Mälarhöjdens skola",
+    272,
+    93
+   ],
+   [
+    "Engelska Skolan Novia",
+    267,
+    75
+   ],
+   [
+    "Entréskolan Stockholm",
+    266,
+    87
+   ]
+  ]
+ },
+ "Vasastan-Norrmalm": {
+  "schools": 22,
+  "g9_schools": 12,
+  "merit": 275,
+  "eligible": 87,
+  "salsa_dev": 17.8,
+  "top": [
+   [
+    "Enskilda gymnasiet, gr",
+    301,
+    96
+   ],
+   [
+    "Adolf Fredriks musikklasser",
+    299,
+    94
+   ],
+   [
+    "Vasa International School of Stockholm",
+    299,
+    96
+   ]
+  ]
+ },
+ "Södermalm": {
+  "schools": 36,
+  "g9_schools": 18,
+  "merit": 255,
+  "eligible": 84,
+  "salsa_dev": 4.4,
+  "top": [
+   [
+    "Europaskolan",
+    300,
+    98
+   ],
+   [
+    "Kungliga Svenska Balettskolan",
+    289,
+    100
+   ],
+   [
+    "Maria Elementarskola",
+    277,
+    93
+   ]
+  ]
+ },
+ "Sundbyberg": {
+  "schools": 10,
+  "g9_schools": 6,
+  "merit": 250,
+  "eligible": 78,
+  "salsa_dev": 13.3,
+  "top": [
+   [
+    "Viktor Rydbergs skola Sundbyberg",
+    278,
+    96
+   ],
+   [
+    "Kulturama Grundsk. Sundbyberg",
+    277,
+    81
+   ],
+   [
+    "Vittra Brotorp",
+    254,
+    86
+   ]
+  ]
+ },
+ "Huddinge": {
+  "schools": 38,
+  "g9_schools": 15,
+  "merit": 243,
+  "eligible": 76,
+  "salsa_dev": 10.3,
+  "top": [
+   [
+    "Lärande Grundskola Skapa",
+    279,
+    94
+   ],
+   [
+    "Södertörns friskola",
+    268,
+    90
+   ],
+   [
+    "Trångsundsskolan",
+    259,
+    77
+   ]
+  ]
+ },
+ "Haninge": {
+  "schools": 32,
+  "g9_schools": 10,
+  "merit": 212,
+  "eligible": 64,
+  "salsa_dev": -0.8,
+  "top": [
+   [
+    "JENSEN grundskola Tungelsta",
+    263,
+    81
+   ],
+   [
+    "HagaLyckebyskolan",
+    229,
+    78
+   ],
+   [
+    "Innovitaskolan Rudan",
+    226,
+    77
+   ]
+  ]
+ },
+ "Nacka": {
+  "schools": 39,
+  "g9_schools": 15,
+  "merit": 267,
+  "eligible": 88,
+  "salsa_dev": 16.7,
+  "top": [
+   [
+    "Ebba Braheskolan",
+    290,
+    96
+   ],
+   [
+    "JENSEN grundskola Sickla",
+    285,
+    92
+   ],
+   [
+    "Nacka Idrottsgrundskola",
+    280,
+    100
+   ]
+  ]
+ },
+ "Värmdö": {
+  "schools": 18,
+  "g9_schools": 7,
+  "merit": 247,
+  "eligible": 83,
+  "salsa_dev": 12.0,
+  "top": [
+   [
+    "Internationella Engelska Skolan Värmdö",
+    281,
+    95
+   ],
+   [
+    "Lemshagastiftelsen",
+    273,
+    96
+   ],
+   [
+    "Ösbyskolan",
+    255,
+    84
+   ]
+  ]
+ },
+ "Enskede-Skarpnäck": {
+  "schools": 24,
+  "g9_schools": 14,
+  "merit": 252,
+  "eligible": 77,
+  "salsa_dev": 8.9,
+  "top": [
+   [
+    "Kulturskolan Raketen",
+    285,
+    92
+   ],
+   [
+    "Skarpnäcks skola",
+    276,
+    94
+   ],
+   [
+    "Internationella Engelska Skolan Årsta",
+    268,
+    87
+   ]
+  ]
+ },
+ "Danderyd": {
+  "schools": 18,
+  "g9_schools": 3,
+  "merit": 279,
+  "eligible": 93,
+  "salsa_dev": 18.7,
+  "top": [
+   [
+    "Viktor Rydbergs samskola Djursholm",
+    286,
+    97
+   ],
+   [
+    "Fribergaskolan",
+    278,
+    92
+   ],
+   [
+    "Mörbyskolan",
+    272,
+    91
+   ]
+  ]
+ },
+ "Tyresö": {
+  "schools": 16,
+  "g9_schools": 7,
+  "merit": 240,
+  "eligible": 76,
+  "salsa_dev": 6.6,
+  "top": [
+   [
+    "Fornuddens skola",
+    260,
+    80
+   ],
+   [
+    "Internationella Engelska Skolan Tyresö",
+    259,
+    83
+   ],
+   [
+    "Strandskolan",
+    256,
+    81
+   ]
+  ]
+ },
+ "Täby": {
+  "schools": 32,
+  "g9_schools": 15,
+  "merit": 253,
+  "eligible": 84,
+  "salsa_dev": 3.0,
+  "top": [
+   [
+    "Spirande lärande i Täby AB",
+    295,
+    100
+   ],
+   [
+    "Internationella Engelska Skolan Täby",
+    280,
+    93
+   ],
+   [
+    "Täby Friskola-Enhagen",
+    279,
+    95
+   ]
+  ]
+ },
+ "Sollentuna": {
+  "schools": 31,
+  "g9_schools": 22,
+  "merit": 257,
+  "eligible": 83,
+  "salsa_dev": 18.4,
+  "top": [
+   [
+    "Futuraskolan International Rådan",
+    304,
+    100
+   ],
+   [
+    "Sollentuna musikklasser",
+    293,
+    100
+   ],
+   [
+    "Rälsen AB åk 4-9",
+    285,
+    93
+   ]
+  ]
+ },
+ "Järfälla": {
+  "schools": 25,
+  "g9_schools": 7,
+  "merit": 227,
+  "eligible": 66,
+  "salsa_dev": 3.0,
+  "top": [
+   [
+    "Internationella Engelska Skolan Järfälla",
+    258,
+    85
+   ],
+   [
+    "Viksjöskolan",
+    237,
+    72
+   ],
+   [
+    "Vittra Jakobsberg",
+    234,
+    61
+   ]
+  ]
+ },
+ "Hässelby-Vällingby": {
+  "schools": 17,
+  "g9_schools": 9,
+  "merit": 230,
+  "eligible": 68,
+  "salsa_dev": 6.7,
+  "top": [
+   [
+    "Abrahamsbergsskolan",
+    264,
+    88
+   ],
+   [
+    "Hässelby Villastads skola",
+    256,
+    88
+   ],
+   [
+    "Internationella Engelska skolan Hässelby",
+    254,
+    76
+   ]
+  ]
+ },
+ "Solna": {
+  "schools": 22,
+  "g9_schools": 10,
+  "merit": 236,
+  "eligible": 74,
+  "salsa_dev": -5.9,
+  "top": [
+   [
+    "Noblaskolan Solna",
+    285,
+    100
+   ],
+   [
+    "Internationella Engelska Skolan Solna",
+    267,
+    87
+   ],
+   [
+    "Vittra Frösunda",
+    267,
+    90
+   ]
+  ]
+ },
+ "Bromma-Västerled": {
+  "schools": 23,
+  "g9_schools": 10,
+  "merit": 252,
+  "eligible": 79,
+  "salsa_dev": 5.3,
+  "top": [
+   [
+    "Äppelviksskolan",
+    289,
+    96
+   ],
+   [
+    "Höglandsskolan",
+    282,
+    95
+   ],
+   [
+    "Nya Elementar",
+    269,
+    90
+   ]
+  ]
+ },
+ "Lidingö": {
+  "schools": 18,
+  "g9_schools": 7,
+  "merit": 269,
+  "eligible": 93,
+  "salsa_dev": 14.4,
+  "top": [
+   [
+    "Källängens skola",
+    285,
+    94
+   ],
+   [
+    "Futuraskolan International Kottla",
+    282,
+    96
+   ],
+   [
+    "Torsviks skola",
+    278,
+    98
+   ]
+  ]
+ },
+ "Essingen": {
+  "schools": 4,
+  "g9_schools": 2,
+  "merit": 230,
+  "eligible": 63,
+  "salsa_dev": -8.0,
+  "top": [
+   [
+    "Nordic International School, Stockholm",
+    280,
+    86
+   ],
+   [
+    "Lunaskolan Södra",
+    180,
+    40
+   ]
+  ]
+ },
+ "Botkyrka": {
+  "schools": 26,
+  "g9_schools": 16,
+  "merit": 233,
+  "eligible": 71,
+  "salsa_dev": 20.4,
+  "top": [
+   [
+    "Freinetskolan Kastanjen",
+    269,
+    88
+   ],
+   [
+    "Rikstens skola",
+    261,
+    84
+   ],
+   [
+    "Botkyrka Friskola F-9",
+    258,
+    71
+   ]
+  ]
+ },
+ "Kungsholmen": {
+  "schools": 10,
+  "g9_schools": 5,
+  "merit": 267,
+  "eligible": 85,
+  "salsa_dev": 17.0,
+  "top": [
+   [
+    "Montessori Mondial Kungsholmen",
+    291,
+    95
+   ],
+   [
+    "Kungsholmens grundskola",
+    285,
+    94
+   ],
+   [
+    "Rålambshovsskolan",
+    268,
+    88
+   ]
+  ]
+ },
+ "_avg": {
+  "merit": 248,
+  "eligible": 78
+ }
+}

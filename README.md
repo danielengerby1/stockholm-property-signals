@@ -10,6 +10,10 @@ Hosted version: https://claude.ai/artifact/P9oxqbjC66vXB5SqyMte3A
 - **Correlation:** lagged cross-correlation from −12 to +12 months, pooled across areas and per area. Negative lags show prices moving before the news.
 - **Forecast:** a pooled ridge regression on price momentum, rates and lagged news, police and planning signals. Uses 400 Monte Carlo paths with a 10–90% range, and is backtested against a model without news.
 
+- **Map & commute:** a map of all 25 areas, coloured by price, travel time, income, families, schools or largest party. Shows distance and travel time to T-Centralen by public transport, car and bike.
+- **Where should I live?:** an English matcher. Enter budget, size, household, home type, commute mode and priorities, and get the areas ranked with reasons for each.
+- **Neighbourhoods:** detailed profiles with official statistics, the 2026 election and a written overview.
+
 ## Data inputs
 The data is imported as files. The page doesn't fetch any websites itself.
 
