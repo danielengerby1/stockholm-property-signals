@@ -7,6 +7,7 @@ All data here comes from free, openly published sources. It was fetched on 2026-
 | `maklarstatistik_monthly_bostadsratter.csv` | [Svensk Mäklarstatistik](https://www.maklarstatistik.se/omrade/riket/stockholms-lan/stockholm/) | Bostadsrätter, kr/kvm (3-month rolling average, as published) and the number sold per month. Oct 2022 – Sep 2026, for Stockholm city, Centrala Stockholm, 12 districts (stadsdelsområden) and 13 municipalities in Stockholm County. |
 | `maklarstatistik_yearly_bostadsratter.csv` | Svensk Mäklarstatistik | Annual average kr/kvm for the same areas: from 1996 for municipalities and from 2005 for Stockholm districts. |
 | `polisen_events_stockholms_lan.json` | [Polisen open API](https://polisen.se/api/events) | 1,177 police events in Stockholm County, 3 May – 3 Nov 2026. About 734 of them can be matched to one of the 25 areas. |
+| `google_news_stockholm.csv` | [Google News RSS](https://news.google.com) | 31,869 headlines, Oct 2021 – Nov 2026. Made from one search per area per month that combines the area's main neighbourhood names (1,550 searches, 46,961 raw results). Kept only where the headline names a place in the area or the source is a hyperlocal outlet (Mitt i, Bättre stadsdel and similar). Sports listings and foreign sources were dropped. `place_in_headline` marks the stricter subset. |
 | `riksbank_policy_rate.csv` | [Sveriges Riksbank API](https://api.riksbank.se/swea/v1/Observations/SECBREPOEFF/2015-01-01/2026-11-03) | Policy rate (styrränta), last value of each month, 2015 onwards. |
 
 All of this data is also built into `index.html`, and the app loads it by default. The aggregates "Stockholm" and "Centrala Stockholm" are left out of the analysis so that areas aren't double-counted.
@@ -16,6 +17,9 @@ Mäklarstatistik updates around the 8th of each month. Open their Stockholm page
 
 ## Refreshing police events
 The police API only keeps about 6 months of events. Run `fetch_polisen.js` in the console on polisen.se/api/events every month or two, then drop the file into the app. Duplicates are removed automatically.
+
+## News scoring
+The app scores headlines with a Swedish word list (−1…1). It catches clear cases well, such as shootings, explosions and closures (negative) and openings, renovations and new parks (positive). About two-thirds of headlines score neutral. The app's "Score with Claude" button gives more accurate scores in batches.
 
 ## Limits
 - Free monthly data only goes back 48 months. Older history is annual only.
