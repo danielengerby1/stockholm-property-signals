@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stockholm Property Signals</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+:root{
+  --bg:#f7f7f5;--panel:#ffffff;--ink:#1c1c1a;--muted:#6b6b66;--line:#e4e3de;--soft:#f0efea;
+  --accent:#2f5d8a;--pos:#2e7d4f;--neg:#b5452f;--warn:#a86b00;--chip:#eef2f6;
+  --radius:10px;font-synthesis:none;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#151514;--panel:#1e1e1c;--ink:#ecebe6;--muted:#9c9b94;--line:#33332f;--soft:#262624;
+  --accent:#7fb0de;--pos:#6cc28f;--neg:#e38a75;--warn:#e0b050;--chip:#26303a;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header{padding:18px 24px 0;max-width:1280px;margin:0 auto}
+h1{font-size:20px;margin:0 0 2px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 14px}
+nav{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto}
+nav button{background:none;border:0;padding:10px 14px;font:inherit;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+nav button.on{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+main{max-width:1280px;margin:0 auto;padding:18px 24px 60px}
+section{display:none}section.on{display:block}
+.banner{background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--warn);padding:10px 14px;border-radius:8px;margin-bottom:16px}
+.banner b{color:var(--warn)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.card h3{margin:0 0 4px;font-size:15px}
+.card .hint{color:var(--muted);font-size:12.5px;margin:0 0 10px}
+.kpi .v{font-size:24px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .l{color:var(--muted);font-size:12.5px}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.ctl label{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+select,input[type=number],input[type=text],textarea{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 8px}
+textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+button.b{font:inherit;background:var(--accent);color:#fff;border:0;border-radius:7px;padding:7px 12px;cursor:pointer}
+button.b2{font:inherit;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 11px;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer;user-select:none}
+.chip.on{background:var(--chip);border-color:var(--accent);color:var(--ink)}
+.chartbox{position:relative;height:340px}.chartbox.sm{height:260px}.chartbox.lg{height:420px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--panel);cursor:pointer}
+td.n,th.n{text-align:right}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.mut{color:var(--muted)}
+.scroll{max-height:460px;overflow:auto}
+.heat td{text-align:center;font-size:12px;padding:5px 4px;min-width:42px}
+.heat td:first-child{text-align:left;white-space:nowrap}
+pre{background:var(--soft);border:1px solid var(--line);border-radius:7px;padding:10px;overflow:auto;font-size:12px;margin:6px 0}
+.drop{border:1.5px dashed var(--line);border-radius:9px;padding:14px;text-align:center;color:var(--muted)}
+.drop.over{border-color:var(--accent);background:var(--chip)}
+.status{font-size:12.5px;color:var(--muted);margin-top:6px;min-height:18px}
+.note{font-size:12.5px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}
+a{color:var(--accent)}
+.toast{position:fixed;right:16px;bottom:16px;background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:.95}
+td input[type=number]{width:64px;padding:2px 4px}
+.verdict{padding:10px 12px;border-radius:8px;background:var(--soft);border:1px solid var(--line);margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Stockholm Property Signals</h1>
+  <p class="sub">Neighbourhood prices × local news, police incidents, planning and macro — lagged correlations and price forecasts.</p>
+  <nav id="tabs">
+    <button data-t="overview" class="on">Overview</button>
+    <button data-t="prices">Prices</button>
+    <button data-t="news">News &amp; signals</button>
+    <button data-t="corr">Correlation</button>
+    <button data-t="fc">Forecast</button>
+    <button data-t="data">Data &amp; sources</button>
+  </nav>
+</header>
+<main>
+  <div id="demoBanner" class="banner"><b>Demo data.</b> The prices and headlines loaded now are synthetic, generated for illustration. A news→price effect with a 4-month lag is deliberately built in so the analysis has something to find. Import your own data in <a href="#data" data-goto="data">Data &amp; sources</a> to analyse real prices.</div>
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="on">
+    <div class="grid g4" id="kpis"></div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>12-month price change by neighbourhood</h3><p class="hint">Change in kr/kvm (3-month smoothed), latest month vs a year earlier.</p><div class="chartbox lg"><canvas id="cYoy"></canvas></div></div>
+      <div class="card"><h3>Does news lead prices?</h3><p class="hint">Pooled across all areas: correlation between net news sentiment and the following 3-month price change, at each lag. Bars outside the dashed band are unlikely to be chance.</p><div class="chartbox lg"><canvas id="cOvCorr"></canvas></div><div id="ovVerdict" class="verdict"></div></div>
+    </div>
+  </section>
+
+  <!-- PRICES -->
+  <section id="prices">
+    <div class="card">
+      <div class="ctl">
+        <label>Show <select id="pMode"><option value="ppsqm">kr/kvm</option><option value="index">Index (start = 100)</option><option value="yoy">12-month change %</option></select></label>
+        <label>From <select id="pFrom"></select></label>
+        <label><input type="checkbox" id="pSmooth" checked> 3-month smoothing</label>
+        <label><input type="checkbox" id="pRate"> Overlay policy rate</label>
+        <button class="b2" id="pAll">All</button><button class="b2" id="pNone">None</button>
+      </div>
+      <div class="chips" id="pChips"></div>
+      <div class="chartbox lg"><canvas id="cPrice"></canvas></div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>Neighbourhood table</h3><p class="hint">Click a column to sort. Changes use 3-month smoothed kr/kvm.</p><div class="scroll"><table id="pTable"></table></div></div>
+  </section>
+
+  <!-- NEWS -->
+  <section id="news">
+    <div class="card">
+      <div class="ctl">
+        <label>Area <select id="nArea"></select></label>
+        <label>Category <select id="nCat"><option value="">All</option><option value="news">News articles</option><option value="police">Police incidents</option><option value="planning">Planning &amp; infrastructure</option></select></label>
+        <label>Search <input type="text" id="nQ" placeholder="word in headline" size="16"></label>
+        <button class="b" id="nClaude" title="Asks Claude to score sentiment, category and area for headlines in the current filter">Score with Claude</button>
+        <button class="b2" id="nRescore">Re-score with word list</button>
+      </div>
+      <div class="status" id="nStatus"></div>
+      <div class="chartbox"><canvas id="cNews"></canvas></div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>Items</h3><p class="hint">Sentiment runs from −1 (very negative for the area) to +1 (very positive). Edit a score to correct it; your edits are kept when re-scoring with the word list.</p><div class="scroll"><table id="nTable"></table></div><div class="note" id="nCount"></div></div>
+  </section>
+
+  <!-- CORRELATION -->
+  <section id="corr">
+    <div class="card">
+      <div class="ctl">
+        <label>Signal <select id="kSig">
+          <option value="sent">Net sentiment (all items)</option>
+          <option value="newsS">News article sentiment</option>
+          <option value="police">Police incidents (count)</option>
+          <option value="plan">Planning &amp; infrastructure score</option>
+          <option value="dpol">Policy rate change (3 months)</option>
+          <option value="dmort">Mortgage rate change (3 months)</option>
+        </select></label>
+        <label>Signal window <select id="kWin"><option>1</option><option selected>3</option><option>6</option></select> months</label>
+        <label>Price change over next <select id="kH"><option>1</option><option selected>3</option><option>6</option><option>12</option></select> months</label>
+        <label>Area <select id="kArea"></select></label>
+      </div>
+      <div class="grid g2">
+        <div><h3>Cross-correlation by lag</h3><p class="hint">Positive lag = the signal comes <i>before</i> the price change. Negative lag = prices move first (e.g. rising prices attracting positive coverage). Dashed lines: approx. 95% band, adjusted for overlapping windows.</p><div class="chartbox"><canvas id="cCorr"></canvas></div></div>
+        <div><h3>Scatter at lag <select id="kLag"></select> months</h3><p class="hint">Each dot is one area-month (signal and price change each standardised within its area).</p><div class="chartbox"><canvas id="cScatter"></canvas></div></div>
+      </div>
+      <div id="kVerdict" class="verdict"></div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>By neighbourhood</h3><p class="hint">Correlation per area at selected lags. Few news items per area make single-area values noisy — trust the pooled row more.</p><div class="scroll"><table class="heat" id="kHeat"></table></div></div>
+  </section>
+
+  <!-- FORECAST -->
+  <section id="fc">
+    <div class="card">
+      <div class="ctl">
+        <label>Area <select id="fArea"></select></label>
+        <label>Horizon <select id="fH"><option>6</option><option selected>12</option><option>18</option><option>24</option></select> months</label>
+        <label>News lag in model <select id="fLag"></select></label>
+        <label>Policy rate in 12 months <input type="number" id="fRate" step="0.25" style="width:70px"> %</label>
+        <label>News shock for this area <select id="fShock"><option value="0">None</option><option value="1.5">Strongly positive</option><option value="0.75">Positive</option><option value="-0.75">Negative</option><option value="-1.5">Strongly negative</option></select></label>
+        <button class="b" id="fRun">Run forecast</button>
+      </div>
+      <div class="grid g2">
+        <div><h3 id="fTitle">Forecast</h3><p class="hint">Median path with 10–90% range from 400 simulated paths. Model: pooled ridge regression on price momentum, city-wide momentum, policy-rate changes and lagged news, police and planning signals.</p><div class="chartbox lg"><canvas id="cFc"></canvas></div></div>
+        <div><h3>Backtest: does news improve the forecast?</h3><p class="hint">Model trained on everything before the last 24 months, then asked to predict each of those months one step ahead.</p><table id="fBack"></table><div id="fVerdict" class="verdict"></div>
+          <h3 style="margin-top:16px">What drives the model</h3><p class="hint">Standardised coefficients: effect on next month's price change (percentage points) of a one-standard-deviation move in each input.</p><div class="chartbox sm"><canvas id="cCoef"></canvas></div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="ctl" style="justify-content:space-between"><div><h3>All neighbourhoods</h3><p class="hint" style="margin:0">Forecast change over the horizon, with 10–90% range.</p></div><button class="b2" id="fCopy">Copy as CSV</button></div>
+      <div class="scroll"><table id="fTable"></table></div>
+    </div>
+    <p class="note">This is a statistical model, not financial advice. It extrapolates relationships seen in past data; it cannot foresee shocks such as rule changes or a sudden rate move, and wide ranges are honest about that.</p>
+  </section>
+
+  <!-- DATA -->
+  <section id="data">
+    <div class="grid g2">
+      <div class="card">
+        <h3>Import data</h3>
+        <p class="hint">Drop or choose files. CSV can use comma or semicolon, and decimal commas are fine. Imports add to what's loaded; matching rows are replaced.</p>
+        <div class="ctl"><label>File type <select id="dKind">
+          <option value="prices">Prices (CSV: monthly kr/kvm, or individual sales)</option>
+          <option value="news">News items (CSV)</option>
+          <option value="rss">Google News RSS (.xml / pasted)</option>
+          <option value="police">Polisen events (JSON from polisen.se/api)</option>
+          <option value="macro">Macro (CSV)</option>
+        </select></label>
+        <label id="dRssAreaL">Assign to <select id="dRssArea"></select></label></div>
+        <div class="drop" id="drop">Drop a file here or <label style="display:inline;color:var(--accent);cursor:pointer;text-decoration:underline">choose one<input type="file" id="dFile" hidden multiple accept=".csv,.txt,.xml,.json,.rss,.tsv"></label></div>
+        <p class="note" style="margin:10px 0 4px">…or paste the content (CSV, RSS XML or JSON):</p>
+        <textarea id="dPaste" rows="5" placeholder="Paste here, then press Import pasted"></textarea>
+        <div class="ctl" style="margin-top:8px"><button class="b" id="dPasteBtn">Import pasted</button>
+          <button class="b2" id="dDemo">Load demo data</button>
+          <button class="b2" id="dClear">Clear all data</button></div>
+        <div class="status" id="dStatus"></div>
+      </div>
+      <div class="card">
+        <h3>Saved to your account</h3>
+        <p class="hint">Your imported data is saved privately to your Claude account so it's here next time, on any device. Nobody else who opens this page can see it.</p>
+        <div class="ctl"><button class="b" id="sSave">Save now</button><label><input type="checkbox" id="sAuto" checked> Save automatically after imports</label></div>
+        <div class="status" id="sStatus">Checking for saved data…</div>
+        <h3 style="margin-top:16px">Loaded</h3>
+        <table id="dSummary"></table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Where to get the data</h3>
+      <p class="hint">This page can't fetch websites itself, so you download from these sources and drop the files above.</p>
+      <table>
+        <tr><th>Data</th><th>Source</th><th>How</th></tr>
+        <tr><td>Prices per neighbourhood</td><td><a href="https://www.maklarstatistik.se" target="_blank" rel="noopener">Svensk Mäklarstatistik</a></td><td>Monthly kr/kvm for bostadsrätter by Stockholm area. Copy the figures into the price template below.</td></tr>
+        <tr><td>Individual sales</td><td><a href="https://www.booli.se/slutpriser/stockholm" target="_blank" rel="noopener">Booli slutpriser</a>, <a href="https://www.hemnet.se/salda/bostader" target="_blank" rel="noopener">Hemnet sålda</a></td><td>Export or copy sold listings with date, price, living area and area name. The importer computes kr/kvm and monthly medians.</td></tr>
+        <tr><td>National price index</td><td><a href="https://www.statistikdatabasen.scb.se" target="_blank" rel="noopener">SCB Statistikdatabasen</a>, <a href="https://www.valueguard.se" target="_blank" rel="noopener">Valueguard HOX</a></td><td>Use as a city-wide baseline (import as area "Stockholm").</td></tr>
+        <tr><td>News per area</td><td>Google News RSS</td><td>Open a feed for an area, save the page (Ctrl/Cmd+S) and drop it here with that area selected. <span id="rssLinks"></span></td></tr>
+        <tr><td>Police incidents</td><td><a href="https://polisen.se/api/events?locationname=Stockholm" target="_blank" rel="noopener">polisen.se/api/events</a></td><td>Free open API, latest ~500 events. Save the JSON and drop it here; events are matched to areas by place names in the text. Import regularly to build up history.</td></tr>
+        <tr><td>Planning &amp; infrastructure</td><td><a href="https://vaxer.stockholm" target="_blank" rel="noopener">Stockholm växer</a>, <a href="https://www.sll.se" target="_blank" rel="noopener">Region Stockholm</a> (tunnelbana)</td><td>Add project milestones as news rows with category <code>planning</code>.</td></tr>
+        <tr><td>Policy rate, mortgage rates</td><td><a href="https://www.riksbank.se/sv/statistik/rantor-och-valutakurser/" target="_blank" rel="noopener">Riksbanken</a>, <a href="https://www.scb.se" target="_blank" rel="noopener">SCB</a> (KPIF, unemployment)</td><td>Monthly values in the macro template.</td></tr>
+      </table>
+    </div>
+
+    <div class="grid g3" style="margin-top:14px">
+      <div class="card"><h3>Prices template</h3><p class="hint">Monthly per area. <code>n_sales</code> optional.</p>
+<pre id="tPrices">month,area,price_per_sqm,n_sales
+2025-01,Södermalm,104500,182
+2025-01,Vasastan,108200,140</pre>
+<p class="hint">Or individual sales — any of these column names work: <code>sold_date</code>, <code>sold_price</code>, <code>living_area</code>, <code>area</code>.</p>
+<button class="b2" data-copy="tPrices">Copy</button></div>
+      <div class="card"><h3>News template</h3><p class="hint"><code>area</code>, <code>category</code> (news / police / planning) and <code>score</code> (−1…1) are optional — they're filled in automatically.</p>
+<pre id="tNews">date,area,headline,source,category,score
+2025-03-12,Liljeholmen,Ny park invigs vid Liljeholmskajen,Mitt i,,
+2025-03-15,,Skottlossning i Rinkeby,Polisen,police,</pre>
+<button class="b2" data-copy="tNews">Copy</button></div>
+      <div class="card"><h3>Macro template</h3><p class="hint">Monthly. Leave a cell empty if unknown.</p>
+<pre id="tMacro">month,policy_rate,mortgage_rate_3m,cpif,unemployment
+2025-01,2.50,3.20,1.9,8.9
+2025-02,2.25,3.05,2.0,9.0</pre>
+<button class="b2" data-copy="tMacro">Copy</button></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Neighbourhoods and the place names that map to them</h3>
+      <p class="hint">One area per line: <code>Area: alias, alias, …</code>. Headlines and police reports mentioning a street, square or sub-district are assigned to the area. Add streets you care about.</p>
+      <textarea id="aliasBox" rows="12"></textarea>
+      <div class="ctl" style="margin-top:8px"><button class="b" id="aliasSave">Apply and re-match unassigned items</button></div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ================= constants ================= */
+const DEFAULT_AREAS = [
+ ["Östermalm","östermalm, stureplan, karlaplan, gärdet, lärkstaden, valhallavägen, strandvägen, hjorthagen, norra djurgårdsstaden, tekniska högskolan"],
+ ["Vasastan","vasastan, vasastaden, odenplan, sankt eriksplan, s:t eriksplan, rådmansgatan, birkastan, sibirien, vasaparken, tegnérlunden, upplandsgatan, odengatan"],
+ ["Södermalm","södermalm, söder, hornstull, medborgarplatsen, götgatan, skanstull, slussen, mariatorget, zinkensdamm, sofo, nytorget, högalid, katarina, sofia, hornsgatan, ringvägen"],
+ ["Kungsholmen","kungsholmen, fridhemsplan, thorildsplan, stadshagen, kristineberg, lindhagen, rålambshov, hornsbergs strand, marieberg, sankt göransgatan"],
+ ["Norrmalm","norrmalm, city, sergels torg, hötorget, t-centralen, klarakvarteren, drottninggatan, kungsträdgården, norrmalmstorg"],
+ ["Gamla stan","gamla stan, riddarholmen, västerlånggatan, stortorget"],
+ ["Hammarby sjöstad","hammarby sjöstad, sjöstaden, sickla udde, lugnet, luma, hammarby kaj"],
+ ["Liljeholmen","liljeholmen, liljeholmskajen, marievik, årstadal, gröndal"],
+ ["Hägersten","hägersten, aspudden, midsommarkransen, telefonplan, västertorp, fruängen, mälarhöjden, hägerstensåsen"],
+ ["Årsta","årsta, årstaberg, årstafältet"],
+ ["Johanneshov","johanneshov, hammarbyhöjden, gullmarsplan, globen, skärmarbrink, björkhagen, kärrtorp, enskede gård"],
+ ["Enskede","enskede, enskededalen, gubbängen, svedmyra, tallkrogen, sandsborg, skogskyrkogården, stureby"],
+ ["Farsta","farsta, hökarängen, sköndal, fagersjö, larsboda"],
+ ["Skärholmen","skärholmen, bredäng, vårberg, sätra"],
+ ["Bromma","bromma, alvik, abrahamsberg, brommaplan, ålsten, äppelviken, traneberg, ulvsunda, åkeshov, minneberg, nockeby, riksby, stora mossen"],
+ ["Hässelby-Vällingby","hässelby, vällingby, råcksta, kälvesta, blackeberg, grimsta"],
+ ["Spånga-Tensta","spånga, tensta, hjulsta, bromsten, solhem"],
+ ["Rinkeby-Kista","rinkeby, kista, husby, akalla"],
+ ["Älvsjö","älvsjö, örby, solberga, långbro, herrängen"],
+ ["Solna","solna, råsunda, hagalund, frösunda, arenastaden, bergshamra, huvudsta, ulriksdal"],
+ ["Sundbyberg","sundbyberg, hallonbergen, rissne, duvbo, ursvik, lilla alby"],
+ ["Nacka","nacka, sickla, finntorp, järla, ektorp, saltsjöbaden, fisksätra, orminge, älta, henriksdal, kvarnholmen"],
+ ["Lidingö","lidingö, torsvik, larsberg, käppala"],
+ ["Huddinge","huddinge, flemingsberg, stuvsta, segeltorp, skogås, trångsund, vårby"]
+];
+// Word list for Swedish headline sentiment. [pattern (word-start stem unless $), weight]
+const LEX = [
+ ["invig",1],["öppnar",.6],["öppnas",.6],["satsning",.8],["satsar",.8],["upprust",.7],["rustas upp",.7],["renover",.4],["ny park",.8],["park",.25],
+ ["tunnelban",.5],["spårväg",.5],["utbyggnad",.5],["förläng",.3],["förskol",.4],["skola",.2],["rekord",.4],["populär",.6],["attraktiv",.8],["lyft",.5],
+ ["tryggare",.9],["trygghet",.3],["prisad",.6],["vinner",.4],["kulturhus",.6],["bibliotek",.3],["nya bostäder",.4],["detaljplan antagen",.6],["antagen",.3],["godkänd",.4],["klar",.25],
+ ["investering",.5],["arbetstillfällen",.6],["etablera",.5],["restaurang",.25],["torg",.15],["stiger",.3],["ökar",.15],["miljoner",.1],
+ ["skott",-1],["skjut",-1],["spräng",-1],["explosion",-1],["detonation",-1],["mord",-1],["dödad",-1],["dödsskjut",-1],["död",-.5],["knivhugg",-.9],["kniv",-.5],
+ ["rån",-.8],["inbrott",-.6],["stöld",-.4],["misshandel",-.7],["våldtäkt",-1],["våld",-.7],["gäng",-.8],["oro",-.5],["otrygg",-.9],["brand",-.4],["anlagd",-.4],
+ ["lägger ner",-.6],["läggs ner",-.6],["läggs ned",-.6],["nedläggning",-.6],["stänger",-.4],["varsel",-.6],["konkurs",-.7],["faller",-.4],["sjunker",-.4],["prisras",-.8],
+ ["buller",-.4],["störning",-.3],["försen",-.5],["stoppas",-.5],["överklag",-.4],["protest",-.3],["utsatt område",-.9],["särskilt utsatt",-1],["avspärr",-.5],["polisinsats",-.5],
+ ["olycka",-.3],["trafikolycka",-.2],["vandalis",-.5],["klotter",-.3],["skadegörelse",-.4],["narkotika",-.5],["hot$",-.4],["hotad",-.4],["hotet",-.4],["ofredande",-.3],["dåd",-.7]
+];
+const FLIP = /(^|[^a-zåäöé])(minskar|minskat|minskade|färre|lägre|halverats|halverad|sjunkande)([^a-zåäöé]|$)/;
+const POLICE_W = {"skottlossning":-1,"skottlossning, misstänkt":-.8,"mord/dråp":-1,"mord/dråp, försök":-.9,"explosion":-1,"detonation":-1,"rån":-.8,"rån väpnat":-1,"rån, försök":-.6,
+ "misshandel":-.6,"misshandel, grov":-.8,"inbrott":-.5,"inbrott, försök":-.3,"stöld":-.3,"stöld/inbrott":-.5,"brand":-.3,"trafikolycka":-.1,"trafikolycka, personskada":-.2,"narkotikabrott":-.4,
+ "våld/hot mot tjänsteman":-.5,"olaga hot":-.4,"ofredande/förargelse":-.3,"skadegörelse":-.3,"bråk":-.3,"knivlagen":-.4,"vapenlagen":-.6,"övrigt":-.1};
+const POLICE_SKIP = /sammanfattning|försvunnen|kontroll person|fylleri|trafikkontroll|räddningsinsats|uppdatering|övrigt\s*$/i;
+const PLAN_RX = /(detaljplan|bygg|tunnelban|spårväg|pendeltåg|exploater|stadsutveckl|nya bostäder|förskol|skola|park|infrastruktur|station|kvarter|stadsdel ska|planer)/;
+const COLORS = ["#2f5d8a","#c0612b","#3f8f5a","#8a3f7a","#b59a1f","#3a8a8f","#a3423f","#5b5fb0","#6f8f2f","#8f5a2f","#2f8a75","#9a3fa3","#4f7fbf","#bf6f4f","#4f9f7f","#7f4fbf","#af8f3f","#3f6faf","#cf5f7f","#5faf4f","#8f6f9f","#3f9faf","#bf8f5f","#6f6f6f"];
+
+/* ================= state ================= */
+const S = {areas:[], aliases:{}, prices:[], news:[], macro:[], demo:false};
+let DERIVED = null; // cache of panel
+const charts = {};
+let db=null, uid=null, sampleFn=null;
+
+/* ================= helpers ================= */
+const $ = id => document.getElementById(id);
+const fmt = (v,d=0) => v==null||!isFinite(v) ? "–" : v.toLocaleString("sv-SE",{maximumFractionDigits:d,minimumFractionDigits:d});
+const pct = (v,d=1) => v==null||!isFinite(v) ? "–" : (v>0?"+":"")+(v*100).toFixed(d)+"%";
+const cls = v => v==null?"":v>0?"pos":v<0?"neg":"";
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2600);}
+function num(v){ if(v==null) return null; if(typeof v==="number") return isFinite(v)?v:null; let s=String(v).trim().replace(/\s| |kr|%/gi,""); if(!s) return null;
+  if(/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s=s.replace(/\./g,"").replace(",","."); else s=s.replace(",","."); const n=parseFloat(s); return isFinite(n)?n:null; }
+function toMonth(v){ if(!v) return null; const s=String(v).trim(); let m=s.match(/^(\d{4})[-\/.](\d{1,2})/); if(m) return m[1]+"-"+m[2].padStart(2,"0");
+  m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/); if(m) return m[3]+"-"+m[2].padStart(2,"0"); const d=new Date(s); if(!isNaN(d)) return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); return null; }
+function toDate(v){ if(!v) return null; const s=String(v).trim(); let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m) return m[0]; m=s.match(/^(\d{4})-(\d{2})$/); if(m) return s+"-15";
+  const d=new Date(s.replace(/ ([+-]\d{2}):(\d{2})$/," $1$2")); if(!isNaN(d)) return d.toISOString().slice(0,10); return null; }
+function monthAdd(m,k){ let [y,mo]=m.split("-").map(Number); mo+=k; y+=Math.floor((mo-1)/12); mo=((mo-1)%12+12)%12+1; return y+"-"+String(mo).padStart(2,"0"); }
+function monthRange(a,b){ const out=[]; let m=a; while(m<=b){out.push(m); m=monthAdd(m,1);} return out; }
+function mean(a){a=a.filter(x=>x!=null&&isFinite(x)); return a.length?a.reduce((s,x)=>s+x,0)/a.length:null;}
+function sd(a){a=a.filter(x=>x!=null&&isFinite(x)); if(a.length<2) return null; const m=mean(a); return Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length-1));}
+function median(a){a=a.filter(x=>x!=null&&isFinite(x)).sort((x,y)=>x-y); if(!a.length) return null; const h=a.length>>1; return a.length%2?a[h]:(a[h-1]+a[h])/2;}
+function quant(a,q){a=[...a].sort((x,y)=>x-y); const p=(a.length-1)*q, lo=Math.floor(p), hi=Math.ceil(p); return a[lo]+(a[hi]-a[lo])*(p-lo);}
+function corr(x,y){ let n=0,sx=0,sy=0; for(let i=0;i<x.length;i++){ if(x[i]==null||y[i]==null) continue; n++; sx+=x[i]; sy+=y[i]; } if(n<4) return {r:null,n};
+  const mx=sx/n,my=sy/n; let a=0,b=0,c=0; for(let i=0;i<x.length;i++){ if(x[i]==null||y[i]==null) continue; const dx=x[i]-mx,dy=y[i]-my; a+=dx*dy;b+=dx*dx;c+=dy*dy;} return {r:b&&c? a/Math.sqrt(b*c):null,n}; }
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+let RNG=Math.random; const gauss=()=>{let u=0,v=0;while(!u)u=RNG();while(!v)v=RNG();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function areaColor(a){ const i=S.areas.indexOf(a); return COLORS[(i<0?0:i)%COLORS.length]; }
+function norm(s){ return String(s||"").toLowerCase().normalize("NFC"); }
+
+/* ================= areas & matching ================= */
+function setAliases(list){ S.areas=[]; S.aliases={}; for(const [a,al] of list){ S.areas.push(a); S.aliases[a]=al.split(",").map(x=>norm(x).trim()).filter(Boolean); } compileAliases(); }
+let ALIAS_RX=[];
+function compileAliases(){ ALIAS_RX=[]; for(const a of S.areas){ const al=new Set([norm(a),...(S.aliases[a]||[])]); for(const x of al){ ALIAS_RX.push([a,new RegExp("(^|[^a-zåäöé0-9])"+x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"([^a-zåäöé0-9]|$)")]); } } }
+function ensureArea(name){ if(!name) return null; const n=norm(name).trim(); for(const a of S.areas){ if(norm(a)===n || (S.aliases[a]||[]).includes(n)) return a; }
+  const nice=String(name).trim(); S.areas.push(nice); S.aliases[nice]=[n]; compileAliases(); return nice; }
+function matchArea(text){ const t=norm(text); const hits={}; for(const [a,rx] of ALIAS_RX){ const m=t.match(rx); if(m){ const pos=m.index; if(!(a in hits)) hits[a]={c:0,pos}; hits[a].c++; hits[a].pos=Math.min(hits[a].pos,pos);} }
+  const ks=Object.keys(hits); if(!ks.length) return null; ks.sort((x,y)=>hits[y].c-hits[x].c||hits[x].pos-hits[y].pos); return ks[0]; }
+
+/* ================= sentiment ================= */
+const LEX_RX = LEX.map(([p,w])=>{ const exact=p.endsWith("$"); const s=(exact?p.slice(0,-1):p).replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); return [new RegExp("(^|[^a-zåäöé])"+s+(exact?"([^a-zåäöé]|$)":""),"g"),w]; });
+function scoreText(text){ const t=norm(text); let pos=0,neg=0; for(const [rx,w] of LEX_RX){ rx.lastIndex=0; const m=t.match(rx); if(m){ if(w>0) pos+=w*Math.min(m.length,2); else neg+=w*Math.min(m.length,2);} }
+  if(FLIP.test(t) && neg<0){ pos+= -neg*.6; neg=0; } return Math.round(Math.tanh(pos+neg)*100)/100; }
+function guessCat(text,source){ const t=norm(text); if(/polis/.test(norm(source))) return "police"; if(PLAN_RX.test(t)) return "planning"; return "news"; }
+function policeScore(type){ const k=norm(type).trim(); if(k in POLICE_W) return POLICE_W[k]; for(const key in POLICE_W){ if(k.startsWith(key)) return POLICE_W[key]; } return -.3; }
+
+/* ================= demo data ================= */
+function genDemo(){
+  RNG=mulberry32(20261103);
+  const months=monthRange("2015-01","2026-09");
+  const rateSteps=[["2015-01",0],["2015-02",-.10],["2015-07",-.35],["2016-02",-.50],["2019-01",-.25],["2020-01",0],["2022-05",.25],["2022-07",.75],["2022-09",1.75],["2022-11",2.5],["2023-02",3],["2023-04",3.5],["2023-07",3.75],["2023-09",4],["2024-05",3.75],["2024-08",3.5],["2024-10",3.25],["2024-11",2.75],["2025-01",2.5],["2025-02",2.25],["2025-06",2],["2025-09",1.75]];
+  const pol=months.map(m=>{let v=0; for(const [d,r] of rateSteps) if(m>=d) v=r; return v;});
+  const macro=months.map((m,i)=>{ const y=+m.slice(0,4)+(+m.slice(5)-1)/12; const cpif= y<2021.5?1.6+0.4*Math.sin(y*2):y<2022.9?2+ (y-2021.5)*6:y<2024?10-(y-2022.9)*7:2+0.2*Math.sin(y*3);
+    return {month:m,policy:pol[i],mortgage:Math.round((Math.max(pol[i],0)+1.45+0.1*Math.sin(i/5))*100)/100,cpif:Math.round(cpif*10)/10,unemp:Math.round((7.2+ (y>2020?1:0)+(y>2023?0.8:0)+0.3*Math.sin(i/7))*10)/10}; });
+  const base={"Östermalm":96000,"Vasastan":90000,"Södermalm":86000,"Kungsholmen":82000,"Norrmalm":86000,"Gamla stan":88000,"Hammarby sjöstad":70000,"Liljeholmen":60000,"Hägersten":54000,"Årsta":50000,"Johanneshov":55000,"Enskede":48000,"Farsta":37000,"Skärholmen":29000,"Bromma":60000,"Hässelby-Vällingby":39000,"Spånga-Tensta":29000,"Rinkeby-Kista":28000,"Älvsjö":44000,"Solna":61000,"Sundbyberg":51000,"Nacka":54000,"Lidingö":58000,"Huddinge":34000};
+  const crime={"Rinkeby-Kista":3.2,"Spånga-Tensta":2.8,"Skärholmen":2.4,"Farsta":1.6,"Hässelby-Vällingby":1.5,"Norrmalm":2.2,"Södermalm":1.8,"Huddinge":1.6,"Sundbyberg":1.2,"Solna":1.1};
+  const posT=[["Ny park invigs i {a}","planning"],["Kommunen satsar 200 miljoner på upprustning i {a}","planning"],["Tunnelbaneutbyggnaden mot {a} går enligt plan","planning"],["Ny förskola öppnar i {a}","planning"],["{a} rankas bland Stockholms mest attraktiva områden","news"],["Populär restaurang öppnar i {a}","news"],["Tryggheten ökar i {a} enligt ny mätning","news"],["Detaljplan antagen: 600 nya bostäder i {a}","planning"],["Inbrotten minskar kraftigt i {a}","news"],["Nytt kulturhus invigs i {a}","planning"]];
+  const negT=[["Skottlossning i {a} – en person skadad","news"],["Inbrottsvåg i {a} oroar boende","news"],["Butik i {a} centrum lägger ner","news"],["Boende i {a} känner sig otrygga efter våldsdåd","news"],["Bygget i {a} försenas igen","planning"],["Buller och störningar när vägarbetet i {a} drar ut på tiden","planning"],["Brand i flerfamiljshus i {a}","news"],["Detaljplanen i {a} överklagas","planning"],["Gängkonflikt i {a} – polisen ökar närvaron","news"]];
+  const polT=["Inbrott","Misshandel","Skottlossning","Stöld","Rån","Trafikolycka","Skadegörelse","Narkotikabrott"];
+  const prices=[], news=[];
+  const city=months.map((m,i)=>{ const d6=pol[i]-(pol[i-6]??pol[0]); let r=0.0042-0.0055*d6; if(m>="2017-09"&&m<="2018-02") r-=0.013; if(m>="2020-03"&&m<="2020-05") r-=0.004; if(m>="2020-07"&&m<="2021-12") r+=0.004; return r+0.002*gauss(); });
+  for(const a of S.areas.slice(0,24)){
+    const b=base[a]||50000, tilt=0.0004*gauss(); let s=0; const sArr=[]; let lp=Math.log(b);
+    const projects=[]; if(RNG()<.55) projects.push(Math.floor(RNG()*months.length*0.85));
+    months.forEach((m,i)=>{ s=0.88*s+0.32*gauss(); if(projects.includes(i)) s+=1.6; sArr.push(s);
+      const r=city[i]+tilt+0.0045*(sArr[i-4]??0)+0.003*gauss(); lp+=r;
+      const n=Math.max(8,Math.round((b>60000?150:90)*(0.8+0.4*RNG()))); const obs=Math.exp(lp)*(1+0.018*gauss());
+      prices.push({month:m,area:a,ppsqm:Math.round(obs/100)*100,n});
+      const k=poisson(0.9+0.25*Math.abs(s)); for(let j=0;j<k;j++){ const good=RNG()<1/(1+Math.exp(-1.6*s)); const T=(good?posT:negT)[Math.floor(RNG()*(good?posT:negT).length)];
+        const title=T[0].replace("{a}",a); news.push(mkItem(m+"-"+String(1+Math.floor(RNG()*27)).padStart(2,"0"),a,title,"Demo",T[1],null)); }
+      const kp=poisson((crime[a]||0.6)*(1+0.35*Math.max(0,-s))); for(let j=0;j<kp;j++){ const ty=polT[Math.floor(RNG()*polT.length)];
+        news.push({date:m+"-"+String(1+Math.floor(RNG()*27)).padStart(2,"0"),month:m,area:a,title:ty+", "+a,source:"Demo (polis)",cat:"police",score:policeScore(ty),by:"type",url:""}); }
+    });
+  }
+  RNG=Math.random;
+  S.prices=prices; S.news=news; S.macro=macro; S.demo=true;
+}
+function poisson(l){ let L=Math.exp(-l),k=0,p=1; do{k++;p*=RNG();}while(p>L); return k-1; }
+function mkItem(date,area,title,source,cat,score,url){ const d=toDate(date); return {date:d,month:d?d.slice(0,7):null,area:area||matchArea(title),title,source:source||"",cat:cat||guessCat(title,source),score:score!=null?score:scoreText(title),by:score!=null?"file":"words",url:url||""}; }
+
+/* ================= derived panel ================= */
+function derive(){
+  if(DERIVED) return DERIVED;
+  const pm=[...new Set(S.prices.map(p=>p.month))].sort();
+  if(!pm.length){ DERIVED={months:[],areas:[],P:{},sig:{},macro:{policy:[],mortgage:[]},T:0}; return DERIVED; }
+  const months=monthRange(pm[0],pm[pm.length-1]); const T=months.length; const idx=Object.fromEntries(months.map((m,i)=>[m,i]));
+  const areasWithPrice=S.areas.filter(a=>S.prices.some(p=>p.area===a));
+  const P={};
+  for(const a of areasWithPrice){ const raw=new Array(T).fill(null); for(const p of S.prices) if(p.area===a && idx[p.month]!=null) raw[idx[p.month]]=p.ppsqm;
+    // fill small gaps by carrying forward (up to 2 months)
+    let last=null,gap=0; const filled=raw.map(v=>{ if(v!=null){last=v;gap=0;return v;} gap++; return gap<=2?last:null; });
+    const sm=filled.map((v,i)=>{ const w=[filled[i],filled[i-1],filled[i-2]].filter(x=>x!=null); return i>=2&&w.length===3? mean(w): null; });
+    const r=sm.map((v,i)=> i>0&&v!=null&&sm[i-1]!=null? Math.log(v/sm[i-1]) : null);
+    P[a]={raw,filled,sm,r}; }
+  // macro forward filled
+  const mm={}; for(const x of S.macro) mm[x.month]=x; let lp=null,lmo=null; const policy=[],mortgage=[];
+  const allM=monthRange(months[0],monthAdd(months[T-1],36));
+  for(const m of allM){ const x=mm[m]; if(x&&x.policy!=null) lp=x.policy; if(x&&x.mortgage!=null) lmo=x.mortgage; policy.push(lp); mortgage.push(lmo); }
+  // signals per area per month
+  const sig={}; for(const a of areasWithPrice){ sig[a]={sent:new Array(T).fill(0),newsS:new Array(T).fill(0),police:new Array(T).fill(0),plan:new Array(T).fill(0),cnt:new Array(T).fill(0),pos:new Array(T).fill(0),neg:new Array(T).fill(0)}; }
+  let newsMin=null,newsMax=null;
+  for(const n of S.news){ if(!n.area||!sig[n.area]||idx[n.month]==null) continue; const i=idx[n.month], g=sig[n.area]; const sc=n.score||0;
+    g.sent[i]+=sc; g.cnt[i]++; if(sc>0.05) g.pos[i]++; else if(sc<-0.05) g.neg[i]++;
+    if(n.cat==="police") g.police[i]++; else if(n.cat==="planning") g.plan[i]+=sc; else g.newsS[i]+=sc;
+    if(newsMin==null||n.month<newsMin) newsMin=n.month; if(newsMax==null||n.month>newsMax) newsMax=n.month; }
+  // months outside news coverage = null (unknown, not zero)
+  const covLo=newsMin?idx[newsMin]??0:T, covHi=newsMax?idx[newsMax]??T-1:-1;
+  for(const a in sig) for(const k of ["sent","newsS","police","plan"]) sig[a][k]=sig[a][k].map((v,i)=> i>=covLo&&i<=covHi? v : null);
+  DERIVED={months,areas:areasWithPrice,P,sig,macro:{policy,mortgage},T,idx,covLo,covHi};
+  return DERIVED;
+}
+function invalidate(){ DERIVED=null; }
+function rollSum(arr,w){ return arr.map((v,i)=>{ if(i<w-1) return null; let s=0; for(let j=0;j<w;j++){ const x=arr[i-j]; if(x==null) return null; s+=x;} return s; }); }
+function zscore(arr){ const m=mean(arr), s=sd(arr); return arr.map(v=> v==null||!s? null : (v-m)/s); }
+function signalSeries(D,a,key,w){
+  if(key==="dpol"||key==="dmort"){ const src=key==="dpol"?D.macro.policy:D.macro.mortgage; return D.months.map((m,i)=> i>=3&&src[i]!=null&&src[i-3]!=null? src[i]-src[i-3] : null); }
+  return rollSum(D.sig[a][key],w);
+}
+function fwdChange(D,a,H){ const sm=D.P[a].sm; return sm.map((v,i)=> v!=null&&sm[i+H]!=null? Math.log(sm[i+H]/v): null); }
+
+/* ================= rendering: common ================= */
+function mkChart(id,cfg){ if(charts[id]) charts[id].destroy(); const ink=css("--ink"), mut=css("--muted"), line=css("--line");
+  Chart.defaults.color=mut; Chart.defaults.borderColor=line; Chart.defaults.font.family=getComputedStyle(document.body).fontFamily; Chart.defaults.font.size=12;
+  charts[id]=new Chart($(id),cfg); return charts[id]; }
+function fillAreaSelect(sel,opts={}){ const cur=sel.value; const D=derive(); let h=""; if(opts.all) h+=`<option value="__all">All areas (pooled)</option>`; if(opts.any) h+=`<option value="">All areas</option>`;
+  const list=opts.newsAreas? [...new Set([...S.areas])] : D.areas; for(const a of list) h+=`<option>${esc(a)}</option>`; if(opts.unk) h+=`<option value="__none">Unassigned</option>`; sel.innerHTML=h; if([...sel.options].some(o=>o.value===cur)) sel.value=cur; }
+
+/* ================= overview ================= */
+function renderOverview(){
+  const D=derive(); $("demoBanner").style.display=S.demo?"":"none";
+  const last=D.T-1; const yoy={}; for(const a of D.areas){ const sm=D.P[a].sm; if(sm[last]!=null&&sm[last-12]!=null) yoy[a]=sm[last]/sm[last-12]-1; }
+  const cityY=mean(Object.values(yoy)); const nNews=S.news.filter(n=>n.cat!=="police").length, nPol=S.news.filter(n=>n.cat==="police").length;
+  const best=pooledBest(D,"sent",3,3);
+  $("kpis").innerHTML=[
+    [D.areas.length,"neighbourhoods with prices",D.T? `${D.months[0]} → ${D.months[last]}`:"no price data yet"],
+    [pct(cityY),"average 12-month change", D.T?`latest month ${D.months[last]}`:""],
+    [fmt(nNews),"news & planning items",`${fmt(nPol)} police incidents`],
+    [best? (best.r>0?"+":"")+best.r.toFixed(2):"–","strongest news→price correlation",best?`at ${best.lag}-month lag, pooled`:"needs news + prices"]
+  ].map(([v,l,s])=>`<div class="card kpi"><div class="v">${v}</div><div class="l">${l}</div><div class="note">${s}</div></div>`).join("");
+  const arr=Object.entries(yoy).sort((x,y)=>y[1]-x[1]);
+  mkChart("cYoy",{type:"bar",data:{labels:arr.map(x=>x[0]),datasets:[{data:arr.map(x=>x[1]*100),backgroundColor:arr.map(x=>x[1]>=0?css("--pos"):css("--neg"))}]},
+    options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>pct(c.raw/100)}}},scales:{x:{ticks:{callback:v=>v+"%"}},y:{ticks:{autoSkip:false,font:{size:11}}}}}});
+  const cc=crossCorr(D,"__all","sent",3,3);
+  drawCorrBars("cOvCorr",cc);
+  $("ovVerdict").innerHTML=verdictText(cc,"Net news sentiment");
+}
+function pooledBest(D,key,w,H){ const cc=crossCorr(D,"__all",key,w,H); if(!cc) return null; let b=null; for(const x of cc.rows) if(x.lag>0&&x.r!=null&&(!b||Math.abs(x.r)>Math.abs(b.r))) b=x; return b; }
+
+/* ================= prices ================= */
+let pSel=null;
+function renderPrices(){
+  const D=derive(); if(!pSel) pSel=new Set(D.areas.filter(a=>["Östermalm","Södermalm","Hammarby sjöstad","Rinkeby-Kista","Solna","Bromma"].includes(a)).concat(D.areas.slice(0,0)));
+  if(!pSel.size) D.areas.slice(0,5).forEach(a=>pSel.add(a));
+  $("pChips").innerHTML=D.areas.map(a=>`<span class="chip ${pSel.has(a)?"on":""}" data-a="${esc(a)}" style="${pSel.has(a)?`border-color:${areaColor(a)}`:""}">${esc(a)}</span>`).join("");
+  const fromSel=$("pFrom"); if(fromSel.options.length!==Math.ceil(D.T/12)){ const yrs=[...new Set(D.months.map(m=>m.slice(0,4)))]; const cur=fromSel.value; fromSel.innerHTML=yrs.map(y=>`<option>${y}</option>`).join(""); fromSel.value=cur&&yrs.includes(cur)?cur:yrs[0]; }
+  const mode=$("pMode").value, smooth=$("pSmooth").checked; const from=D.months.findIndex(m=>m.startsWith(fromSel.value)); const i0=Math.max(0,from);
+  const labels=D.months.slice(i0);
+  const ds=[...pSel].filter(a=>D.P[a]).map(a=>{ const src=smooth?D.P[a].sm:D.P[a].filled; let y=src.slice(i0);
+    if(mode==="index"){ const b=y.find(v=>v!=null); y=y.map(v=>v!=null&&b?v/b*100:null);} if(mode==="yoy"){ y=src.map((v,i)=>v!=null&&src[i-12]!=null?(v/src[i-12]-1)*100:null).slice(i0);}
+    return {label:a,data:y,borderColor:areaColor(a),backgroundColor:areaColor(a),pointRadius:0,borderWidth:1.8,tension:.2,spanGaps:true}; });
+  if($("pRate").checked) ds.push({label:"Policy rate (%)",data:D.macro.policy.slice(i0,D.T),borderColor:css("--muted"),borderDash:[5,4],pointRadius:0,borderWidth:1.5,yAxisID:"y2",stepped:true});
+  mkChart("cPrice",{type:"line",data:{labels,datasets:ds},options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+    plugins:{legend:{position:"bottom",labels:{boxWidth:12}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.dataset.yAxisID==="y2"?c.raw+" %":mode==="ppsqm"?fmt(c.raw)+" kr/kvm":mode==="yoy"?fmt(c.raw,1)+"%":fmt(c.raw,1)}`}}},
+    scales:{x:{ticks:{maxTicksLimit:12}},y:{ticks:{callback:v=>mode==="ppsqm"?fmt(v/1000)+"k":mode==="yoy"?v+"%":v}},y2:{display:$("pRate").checked,position:"right",grid:{display:false},ticks:{callback:v=>v+"%"}}}}});
+  // table
+  const last=D.T-1; const rows=D.areas.map(a=>{ const sm=D.P[a].sm; const v=sm[last]; const pk=Math.max(...sm.filter(x=>x!=null)); const n=S.prices.filter(p=>p.area===a&&p.month===D.months[last])[0];
+    return {a,v,m1:v&&sm[last-1]?v/sm[last-1]-1:null,m12:v&&sm[last-12]?v/sm[last-12]-1:null,m36:v&&sm[last-36]?v/sm[last-36]-1:null,pk:v&&pk?v/pk-1:null,n:n?n.n:null}; });
+  renderSortTable("pTable",rows,[["a","Area"],["v","kr/kvm",v=>fmt(v),"n"],["m1","1 m",v=>`<span class="${cls(v)}">${pct(v)}</span>`,"n"],["m12","12 m",v=>`<span class="${cls(v)}">${pct(v)}</span>`,"n"],["m36","3 years",v=>`<span class="${cls(v)}">${pct(v)}</span>`,"n"],["pk","vs peak",v=>`<span class="${cls(v)}">${pct(v)}</span>`,"n"],["n","Sales last month",v=>fmt(v),"n"]],"m12");
+}
+const sortState={};
+function renderSortTable(id,rows,cols,defKey){ const st=sortState[id]||(sortState[id]={k:defKey,d:-1}); const k=st.k;
+  rows=[...rows].sort((x,y)=>{ const a=x[k],b=y[k]; if(a==null) return 1; if(b==null) return -1; return (a>b?1:a<b?-1:0)*st.d; });
+  $(id).innerHTML=`<tr>${cols.map(c=>`<th class="${c[3]||""}" data-k="${c[0]}">${c[1]}${k===c[0]?(st.d>0?" ↑":" ↓"):""}</th>`).join("")}</tr>`+rows.map(r=>`<tr>${cols.map(c=>`<td class="${c[3]||""}">${c[2]?c[2](r[c[0]],r):esc(r[c[0]])}</td>`).join("")}</tr>`).join("");
+  $(id).querySelectorAll("th").forEach(th=>th.onclick=()=>{ const kk=th.dataset.k; if(st.k===kk) st.d*=-1; else {st.k=kk; st.d=-1;} renderSortTable(id,rows,cols,defKey); }); }
+
+/* ================= news ================= */
+function newsFiltered(){ const a=$("nArea").value, c=$("nCat").value, q=norm($("nQ").value);
+  return S.news.filter(n=>(!a||(a==="__none"?!n.area:n.area===a))&&(!c||n.cat===c)&&(!q||norm(n.title).includes(q))); }
+function renderNews(){
+  fillAreaSelect($("nArea"),{any:true,newsAreas:true,unk:true});
+  const items=newsFiltered().sort((x,y)=>(y.date||"").localeCompare(x.date||""));
+  const D=derive(); const a=$("nArea").value;
+  // monthly series over the news coverage window
+  const ms=[...new Set(S.news.map(n=>n.month).filter(Boolean))].sort(); const months=ms.length?monthRange(ms[0],ms[ms.length-1]):[]; const mi=Object.fromEntries(months.map((m,i)=>[m,i]));
+  const pos=new Array(months.length).fill(0),neg=new Array(months.length).fill(0),net=new Array(months.length).fill(0);
+  for(const n of items){ const i=mi[n.month]; if(i==null) continue; if(n.score>0.05) pos[i]++; else if(n.score<-0.05) neg[i]--; net[i]+=n.score||0; }
+  const ds=[{type:"bar",label:"Positive items",data:pos,backgroundColor:css("--pos"),stack:"s"},{type:"bar",label:"Negative items",data:neg,backgroundColor:css("--neg"),stack:"s"},
+    {type:"line",label:"Net sentiment, 3-month avg",data:net.map((v,i)=>i>=2?(net[i]+net[i-1]+net[i-2])/3:null),borderColor:css("--ink"),pointRadius:0,borderWidth:1.6,yAxisID:"y"}];
+  if(a && a!=="__none" && D.P[a]){ const r=D.P[a].sm.map((v,i)=>v!=null&&D.P[a].sm[i-12]!=null?(v/D.P[a].sm[i-12]-1)*100:null); const pm=Object.fromEntries(D.months.map((m,i)=>[m,r[i]]));
+    ds.push({type:"line",label:`${a} price, 12-month change %`,data:months.map(m=>pm[m]??null),borderColor:css("--accent"),borderDash:[5,3],pointRadius:0,borderWidth:1.8,yAxisID:"y2",spanGaps:true}); }
+  mkChart("cNews",{data:{labels:months,datasets:ds},options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{boxWidth:12}}},
+    scales:{x:{stacked:true,ticks:{maxTicksLimit:12}},y:{stacked:true,title:{display:true,text:"items per month"}},y2:{display:ds.length>3,position:"right",grid:{display:false},ticks:{callback:v=>v+"%"}}}}});
+  const show=items.slice(0,300);
+  $("nTable").innerHTML=`<tr><th>Date</th><th>Area</th><th>Type</th><th class="n">Score</th><th>Headline</th><th>Source</th></tr>`+show.map(n=>{ const i=S.news.indexOf(n);
+    return `<tr><td class="mut">${esc(n.date)}</td><td>${n.area?esc(n.area):'<span class="mut">–</span>'}</td><td><span class="pill">${esc(n.cat)}</span></td><td class="n"><input type="number" step="0.1" min="-1" max="1" value="${n.score}" data-i="${i}" title="scored by: ${esc(n.by)}"></td><td>${n.url?`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a>`:esc(n.title)}</td><td class="mut">${esc(n.source)}</td></tr>`; }).join("");
+  $("nTable").querySelectorAll("input").forEach(inp=>inp.onchange=()=>{ const n=S.news[+inp.dataset.i]; const v=num(inp.value); if(v==null) return; n.score=Math.max(-1,Math.min(1,v)); n.by="you"; invalidate(); scheduleSave(); });
+  $("nCount").textContent=`${fmt(items.length)} items match${items.length>show.length?` (showing newest ${show.length})`:""}.`;
+  $("nClaude").style.display=sampleFn?"":"none";
+}
+
+/* ================= correlation ================= */
+function crossCorr(D,area,key,w,H){
+  if(!D.T) return null; const areas=area==="__all"?D.areas:[area]; const lags=[]; for(let L=-12;L<=12;L++) lags.push(L);
+  const rows=lags.map(L=>({lag:L,xs:[],ys:[]}));
+  for(const a of areas){ if(!D.P[a]) continue; let x=signalSeries(D,a,key,w); const y0=fwdChange(D,a,H);
+    const zx=zscore(x), zy=zscore(y0);
+    rows.forEach(row=>{ for(let t=0;t<D.T;t++){ const yy=zy[t+row.lag]; if(zx[t]==null||yy==null||yy===undefined) continue; row.xs.push(zx[t]); row.ys.push(yy);} }); }
+  rows.forEach(row=>{ const c=corr(row.xs,row.ys); row.r=c.r; row.n=c.n; const neff=Math.max(4,c.n/Math.max(1,(H+w-1)/1.5)); row.band=1.96/Math.sqrt(neff); });
+  return {rows,key,w,H,area};
+}
+function drawCorrBars(id,cc){ if(!cc){ mkChart(id,{type:"bar",data:{labels:[],datasets:[]}}); return; }
+  const rows=cc.rows; const band=mean(rows.map(r=>r.band));
+  mkChart(id,{type:"bar",data:{labels:rows.map(r=>r.lag),datasets:[{label:"correlation",data:rows.map(r=>r.r),backgroundColor:rows.map(r=>r.r==null?css("--line"):Math.abs(r.r)>r.band?(r.r>0?css("--pos"):css("--neg")):css("--line"))},
+    {type:"line",label:"+95%",data:rows.map(()=>band),borderColor:css("--muted"),borderDash:[4,4],pointRadius:0,borderWidth:1},{type:"line",label:"−95%",data:rows.map(()=>-band),borderColor:css("--muted"),borderDash:[4,4],pointRadius:0,borderWidth:1}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>`lag ${c[0].label} months`,label:c=>c.datasetIndex?null:`r = ${c.raw==null?"–":c.raw.toFixed(3)} (n=${rows[c.dataIndex].n})`}}},
+    scales:{x:{title:{display:true,text:"lag (months) — signal leads price →"}},y:{suggestedMin:-.3,suggestedMax:.3}}}}); }
+function verdictText(cc,label){ if(!cc) return "Load price and news data to run this."; const lead=cc.rows.filter(r=>r.lag>0&&r.r!=null), lagg=cc.rows.filter(r=>r.lag<0&&r.r!=null);
+  if(!lead.length) return "Not enough overlapping news and price data yet."; const b=lead.reduce((x,y)=>Math.abs(y.r)>Math.abs(x.r)?y:x); const bb=lagg.length?lagg.reduce((x,y)=>Math.abs(y.r)>Math.abs(x.r)?y:x):null;
+  const sig=Math.abs(b.r)>b.band; let s=`<b>${label}</b>: strongest lead at <b>${b.lag} months</b>, r = ${b.r.toFixed(2)} (${sig?"outside":"inside"} the chance band, n=${b.n}). `;
+  s+= sig? (b.r>0?"Positive coverage tends to be followed by stronger price growth. ":"Higher values tend to be followed by weaker price growth. ") : "No clear lead effect. ";
+  if(bb && Math.abs(bb.r)>bb.band && Math.abs(bb.r)>=Math.abs(b.r)*0.8) s+=`Note: prices also lead this signal (r = ${bb.r.toFixed(2)} at lag ${bb.lag}), so part of the link may run from prices to news. `;
+  return s+`<span class="mut">Correlation is not causation — both may react to a third factor.</span>`; }
+function renderCorr(){
+  const D=derive(); fillAreaSelect($("kArea"),{all:true}); const key=$("kSig").value, w=+$("kWin").value, H=+$("kH").value, area=$("kArea").value||"__all";
+  $("kWin").disabled=(key==="dpol"||key==="dmort");
+  const cc=crossCorr(D,area,key,w,H); drawCorrBars("cCorr",cc);
+  const lagSel=$("kLag"); if(!lagSel.options.length){ lagSel.innerHTML=[0,1,2,3,4,5,6,9,12].map(l=>`<option>${l}</option>`).join(""); lagSel.value="4"; }
+  if(cc && !lagSel.dataset.touched){ const b=cc.rows.filter(r=>r.lag>=0&&r.lag<=12&&r.r!=null).reduce((x,y)=>!x||Math.abs(y.r)>Math.abs(x.r)?y:x,null); if(b&&[...lagSel.options].some(o=>+o.value===b.lag)) lagSel.value=String(b.lag); }
+  const L=+lagSel.value; const row=cc&&cc.rows.find(r=>r.lag===L);
+  const pts=row? row.xs.map((x,i)=>({x,y:row.ys[i]})).filter((_,i)=>i%Math.ceil(row.xs.length/1500||1)===0):[];
+  let fit=null; if(row&&row.r!=null){ const xs=pts.map(p=>p.x); const lo=Math.min(...xs),hi=Math.max(...xs); fit=[{x:lo,y:row.r*lo},{x:hi,y:row.r*hi}]; }
+  mkChart("cScatter",{type:"scatter",data:{datasets:[{data:pts,pointRadius:2,backgroundColor:css("--accent")+"55",borderColor:"transparent"},...(fit?[{type:"line",data:fit,borderColor:css("--neg"),pointRadius:0,borderWidth:2}]:[])]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{title:{display:true,text:"signal (z)"}},y:{title:{display:true,text:`next ${H}-month price change (z)`}}}}});
+  const lbl=$("kSig").selectedOptions[0].textContent; $("kVerdict").innerHTML=verdictText(cc,lbl+(area==="__all"?" (all areas pooled)":` (${area})`));
+  // heat table
+  const lagsShow=[-6,-3,0,1,2,3,4,6,9,12]; const tbl=[["All areas (pooled)",crossCorr(D,"__all",key,w,H)]].concat(D.areas.map(a=>[a,crossCorr(D,a,key,w,H)]));
+  const pc=css("--pos"), nc=css("--neg");
+  $("kHeat").innerHTML=`<tr><th>Area</th>${lagsShow.map(l=>`<th class="n">${l>0?"+":""}${l}</th>`).join("")}<th class="n">items</th></tr>`+tbl.map(([a,c],k)=>{ const cnt=a.startsWith("All")?S.news.filter(n=>n.area).length:S.news.filter(n=>n.area===a).length;
+    return `<tr${k===0?' style="font-weight:600"':""}><td>${esc(a)}</td>${lagsShow.map(l=>{ const r=c&&c.rows.find(x=>x.lag===l); const v=r&&r.r; if(v==null) return `<td class="mut">–</td>`; const al=Math.min(1,Math.abs(v)/0.5); const sig=Math.abs(v)>r.band;
+      return `<td style="background:${(v>0?pc:nc)}${Math.round(al*160).toString(16).padStart(2,"0")}${sig?";font-weight:700":""}">${v.toFixed(2)}</td>`; }).join("")}<td class="n mut">${fmt(cnt)}</td></tr>`; }).join("");
+}
+
+/* ================= forecast model ================= */
+const FEAT_NAMES=["Own momentum, last month","Own momentum, 2 months ago","Own momentum, 3 months ago","City-wide momentum","Policy rate change, 3 m","Policy rate change, 12 m","News sentiment (lagged)","Police incidents (lagged)","Planning signal (lagged)"];
+function prepModel(D,lag){
+  // per area arrays for signals (z within area), extended later for simulation
+  const Z={}; for(const a of D.areas){ Z[a]={sent:zscore(rollSum(D.sig[a].newsS.map((v,i)=>v==null?null:v),3)),pol:zscore(rollSum(D.sig[a].police,3)),plan:zscore(rollSum(D.sig[a].plan,6))}; }
+  return {Z,lag};
+}
+function featRow(t,a,ctx,withNews){
+  const r=ctx.r[a], c=ctx.city, pol=ctx.policy, L=ctx.lag;
+  if(r[t]==null||r[t-1]==null||r[t-2]==null||c[t]==null) return null;
+  const p0=pol[t],p3=pol[t-3],p12=pol[t-12]; const f=[r[t],r[t-1],r[t-2],c[t],(p0!=null&&p3!=null)?p0-p3:0,(p0!=null&&p12!=null)?p0-p12:0];
+  if(withNews){ const j=t+1-L; const z=ctx.Z[a]; f.push(z.sent[j]??0, z.pol[j]??0, z.plan[j]??0); }
+  return f;
+}
+function ridge(X,y,lambda){
+  const n=X.length,p=X[0].length; const mu=new Array(p).fill(0),sg=new Array(p).fill(0);
+  for(const x of X) x.forEach((v,j)=>mu[j]+=v/n); for(const x of X) x.forEach((v,j)=>sg[j]+=(v-mu[j])**2/n); for(let j=0;j<p;j++) sg[j]=Math.sqrt(sg[j])||1;
+  const ym=y.reduce((s,v)=>s+v,0)/n; const A=Array.from({length:p},()=>new Array(p).fill(0)), b=new Array(p).fill(0);
+  for(let i=0;i<n;i++){ const z=X[i].map((v,j)=>(v-mu[j])/sg[j]); const yy=y[i]-ym; for(let j=0;j<p;j++){ b[j]+=z[j]*yy; for(let k=0;k<p;k++) A[j][k]+=z[j]*z[k]; } }
+  for(let j=0;j<p;j++) A[j][j]+=lambda;
+  const beta=solve(A,b); const pred=x=> ym+x.reduce((s,v,j)=>s+beta[j]*(v-mu[j])/sg[j],0);
+  let ss=0; for(let i=0;i<n;i++) ss+=(y[i]-pred(X[i]))**2; return {beta,mu,sg,ym,pred,sigma:Math.sqrt(ss/Math.max(1,n-p-1)),n}; }
+function solve(A,b){ const n=b.length; const M=A.map((r,i)=>[...r,b[i]]); for(let i=0;i<n;i++){ let mx=i; for(let k=i+1;k<n;k++) if(Math.abs(M[k][i])>Math.abs(M[mx][i])) mx=k; [M[i],M[mx]]=[M[mx],M[i]];
+  const d=M[i][i]||1e-12; for(let k=i;k<=n;k++) M[i][k]/=d; for(let r=0;r<n;r++) if(r!==i){ const f=M[r][i]; for(let k=i;k<=n;k++) M[r][k]-=f*M[i][k]; } } return M.map(r=>r[n]); }
+function cityMom(D,rMap,len){ const c=new Array(len).fill(null); for(let t=0;t<len;t++){ const v=D.areas.map(a=>rMap[a][t]).filter(x=>x!=null); if(v.length>=Math.max(1,D.areas.length*0.5)) c[t]=mean(v);} return c; }
+function fitModel(D,lag,withNews,cutoff){
+  const pm=prepModel(D,lag); const rMap=Object.fromEntries(D.areas.map(a=>[a,D.P[a].r])); const ctx={r:rMap,city:cityMom(D,rMap,D.T),policy:D.macro.policy,Z:pm.Z,lag};
+  const X=[],y=[]; for(const a of D.areas) for(let t=12;t<Math.min(cutoff,D.T)-1;t++){ const yy=rMap[a][t+1]; if(yy==null) continue; const f=featRow(t,a,ctx,withNews); if(!f) continue; X.push(f); y.push(yy); }
+  if(X.length<30) return null; const m=ridge(X,y,Math.max(2,X.length*0.002)); m.ctx=ctx; return m; }
+function backtest(D,lag){
+  const cut=D.T-24; if(cut<36) return null; const mA=fitModel(D,lag,false,cut), mB=fitModel(D,lag,true,cut); if(!mA||!mB) return null;
+  const err={naive:[],pers:[],ar:[],full:[]}, dir={pers:[],ar:[],full:[]};
+  for(const a of D.areas) for(let t=cut-1;t<D.T-1;t++){ const yy=D.P[a].r[t+1]; if(yy==null) continue; const fa=featRow(t,a,mA.ctx,false), fb=featRow(t,a,mB.ctx,true); if(!fa||!fb) continue;
+    const pa=mA.pred(fa), pb=mB.pred(fb), pp=D.P[a].r[t]; err.naive.push(yy*yy); err.pers.push((yy-pp)**2); err.ar.push((yy-pa)**2); err.full.push((yy-pb)**2);
+    dir.pers.push(Math.sign(pp)===Math.sign(yy)); dir.ar.push(Math.sign(pa)===Math.sign(yy)); dir.full.push(Math.sign(pb)===Math.sign(yy)); }
+  const rm=k=>Math.sqrt(mean(err[k])), hr=k=>dir[k].filter(Boolean).length/dir[k].length;
+  return {n:err.full.length,rows:[["No change",rm("naive"),null],["Last month repeats",rm("pers"),hr("pers")],["Model without news",rm("ar"),hr("ar")],["Model with news",rm("full"),hr("full")]]}; }
+function simulate(D,model,H,rateTarget,shockArea,shock,nSim=400){
+  const T=D.T, L=model.ctx.lag; const res={}; const cur=D.macro.policy[T-1]??0;
+  const pol=D.macro.policy.slice(0,T).concat(Array.from({length:H},(_,k)=>cur+(rateTarget-cur)*Math.min(1,(k+1)/12)));
+  for(const a of D.areas) res[a]=Array.from({length:H},()=>[]);
+  const Zext={}; for(const a of D.areas){ const z=model.ctx.Z[a]; Zext[a]={}; for(const k of ["sent","pol","plan"]){ const base=z[k].slice(0,T); let lastI=T-1; while(lastI>0&&base[lastI]==null) lastI--; const lv=base[lastI]??0;
+    const ext=base.slice(); for(let h=1;h<=H+L;h++){ ext[lastI+h]= (lastI+h<T&&base[lastI+h]!=null)?base[lastI+h]: lv*Math.pow(0.8,h) + (a===shockArea&&k==="sent"?shock:0) - (a===shockArea&&k==="pol"&&shock<0? shock*0.5:0); } Zext[a][k]=ext; } }
+  for(let s=0;s<nSim;s++){
+    const r={}; const lp={}; for(const a of D.areas){ r[a]=D.P[a].r.slice(0,T); lp[a]=Math.log(D.P[a].sm[T-1]); }
+    const city=model.ctx.city.slice(0,T); const cityShock=gauss()*model.sigma*0.5;
+    const ctx={r,city,policy:pol,Z:Zext,lag:L};
+    for(let h=0;h<H;h++){ const t=T-1+h; const nxt={};
+      for(const a of D.areas){ const f=featRow(t,a,ctx,true); const p=f?model.pred(f):0; nxt[a]=p+gauss()*model.sigma*0.85+cityShock*0.3; }
+      for(const a of D.areas){ r[a][t+1]=nxt[a]; lp[a]+=nxt[a]; res[a][h].push(Math.exp(lp[a])); }
+      city[t+1]=mean(D.areas.map(a=>nxt[a])); }
+  }
+  const out={}; for(const a of D.areas) out[a]=res[a].map(v=>({p10:quant(v,.1),p50:quant(v,.5),p90:quant(v,.9)})); return out; }
+let FC=null;
+function renderForecast(run){
+  const D=derive(); const fa=$("fArea"); const had=fa.options.length; fillAreaSelect(fa,{}); if(!had&&D.areas.includes("Södermalm")) fa.value="Södermalm"; if(!D.areas.includes(fa.value)&&D.areas.length) fa.value=D.areas[0];
+  const lagSel=$("fLag"); if(!lagSel.options.length){ lagSel.innerHTML=[1,2,3,4,5,6,9,12].map(l=>`<option value="${l}">${l} month${l>1?"s":""}</option>`).join(""); const b=pooledBest(D,"newsS",3,1); lagSel.value=String(b&&b.lag<=12&&[1,2,3,4,5,6,9,12].includes(b.lag)?b.lag:3); }
+  if($("fRate").value===""){ const cur=D.macro.policy[D.T-1]; $("fRate").value=cur!=null?cur:2; }
+  if(!D.T||D.T<40){ $("fTitle").textContent="Forecast — need at least ~40 months of prices"; return; }
+  const lag=+lagSel.value, H=+$("fH").value, area=$("fArea").value;
+  if(run||!FC||FC.key!==[lag,H,$("fRate").value,area,$("fShock").value,D.T,S.news.length].join("|")){
+    const model=fitModel(D,lag,true,D.T); if(!model){ $("fTitle").textContent="Not enough data to fit the model"; return; }
+    const sims=simulate(D,model,H,+$("fRate").value,area,+$("fShock").value); const bt=backtest(D,lag);
+    FC={key:[lag,H,$("fRate").value,area,$("fShock").value,D.T,S.news.length].join("|"),model,sims,bt,H};
+  }
+  const {model,sims,bt}=FC; const T=D.T; const hist=Math.min(60,T); const futM=Array.from({length:H},(_,k)=>monthAdd(D.months[T-1],k+1));
+  const labels=D.months.slice(T-hist).concat(futM); const sm=D.P[area].sm.slice(T-hist); const f=sims[area];
+  const pad=new Array(hist-1).fill(null); const anchor=D.P[area].sm[T-1];
+  $("fTitle").textContent=`${area}: ${pct(f[H-1].p50/anchor-1)} expected over ${H} months`;
+  mkChart("cFc",{type:"line",data:{labels,datasets:[
+    {label:"Actual (3-m smoothed)",data:sm.concat(new Array(H).fill(null)),borderColor:css("--ink"),pointRadius:0,borderWidth:2},
+    {label:"90th pct",data:pad.concat([anchor],f.map(x=>x.p90)),borderColor:"transparent",backgroundColor:css("--accent")+"33",pointRadius:0,fill:"+1"},
+    {label:"10th pct",data:pad.concat([anchor],f.map(x=>x.p10)),borderColor:"transparent",pointRadius:0,fill:false},
+    {label:"Median forecast",data:pad.concat([anchor],f.map(x=>x.p50)),borderColor:css("--accent"),borderDash:[6,4],pointRadius:0,borderWidth:2}]},
+    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{boxWidth:12,filter:i=>!i.text.includes("pct")}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.raw)} kr/kvm`}}},scales:{x:{ticks:{maxTicksLimit:12}},y:{ticks:{callback:v=>fmt(v/1000)+"k"}}}}});
+  if(bt){ const base=bt.rows[2][1], full=bt.rows[3][1]; const imp=(base-full)/base;
+    $("fBack").innerHTML=`<tr><th>Approach</th><th class="n">Error (RMSE, % per month)</th><th class="n">Direction right</th></tr>`+bt.rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${(r[1]*100).toFixed(3)}</td><td class="n">${r[2]==null?"–":Math.round(r[2]*100)+"%"}</td></tr>`).join("");
+    $("fVerdict").innerHTML= imp>0.02? `Adding news, police and planning signals <b>cut the forecast error by ${(imp*100).toFixed(1)}%</b> on ${fmt(bt.n)} unseen area-months. That's evidence the signals carry information beyond price momentum and interest rates.`
+      : imp>-0.01? `News signals made <b>little difference</b> (${(imp*100).toFixed(1)}% change in error) on ${fmt(bt.n)} unseen area-months. Momentum and rates explain most of what can be predicted.`
+      : `News signals made the forecast <b>slightly worse</b> (${(imp*100).toFixed(1)}%) on unseen data — likely noise. Try another lag, or add more news.`;
+  } else { $("fBack").innerHTML=""; $("fVerdict").textContent="Need at least ~5 years of prices to backtest."; }
+  const coef=model.beta.map((b,j)=>b*100);
+  mkChart("cCoef",{type:"bar",data:{labels:FEAT_NAMES.map((n,j)=>j>=6?n.replace("lagged",lag+" m"):n),datasets:[{data:coef,backgroundColor:coef.map((v,j)=>j>=6?(v>0?css("--pos"):css("--neg")):css("--accent")+"aa")}]},
+    options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw>0?"+":""}${c.raw.toFixed(3)} pp per month`}}},scales:{x:{ticks:{callback:v=>v.toFixed(2)}},y:{ticks:{font:{size:11}}}}}});
+  const rows=D.areas.map(a=>{ const an=D.P[a].sm[T-1], ff=sims[a][H-1]; return {a,now:an,mid:ff.p50/an-1,lo:ff.p10/an-1,hi:ff.p90/an-1,price:ff.p50}; });
+  FC.rows=rows;
+  renderSortTable("fTable",rows,[["a","Area"],["now","Now, kr/kvm",v=>fmt(v),"n"],["price",`In ${H} m (median)`,v=>fmt(v),"n"],["mid","Change",v=>`<b class="${cls(v)}">${pct(v)}</b>`,"n"],["lo","10th pct",v=>`<span class="mut">${pct(v)}</span>`,"n"],["hi","90th pct",v=>`<span class="mut">${pct(v)}</span>`,"n"]],"mid");
+}
+
+/* ================= import ================= */
+function parseCSV(text){ const r=Papa.parse(text.trim(),{header:true,skipEmptyLines:true,dynamicTyping:false,transformHeader:h=>norm(h).trim().replace(/[\s.]+/g,"_")}); return r.data; }
+const pick=(row,rxs)=>{ for(const k of Object.keys(row)) for(const rx of rxs) if(rx.test(k)) { const v=row[k]; if(v!=null&&String(v).trim()!=="") return v; } return null; };
+function importPrices(text){
+  const rows=parseCSV(text); if(!rows.length) throw new Error("No rows found");
+  const keys=Object.keys(rows[0]); const hasPPS=keys.some(k=>/(price_per_sqm|per_sqm|kr_kvm|kr\/kvm|pris_kvm|kvmpris|ppsqm|sqm_price|kr_m2|pris_per_kvm)/.test(k));
+  const out={}; let skipped=0;
+  for(const row of rows){
+    const m=toMonth(pick(row,[/^(month|månad|manad|period|date|datum|sold_?date|soldat|såld|sald|sale_?date)/]));
+    const aName=pick(row,[/^(area|område|omrade|stadsdel|neighbourhood|neighborhood|district|location|named_?area|kommun|ort)/]);
+    let pps=null, n=1;
+    if(hasPPS){ pps=num(pick(row,[/(price_per_sqm|per_sqm|kr_kvm|kr\/kvm|pris_kvm|kvmpris|ppsqm|sqm_price|kr_m2|pris_per_kvm)/])); n=num(pick(row,[/^(n_?sales|n|count|antal|sales)$/]))||null; }
+    else { const price=num(pick(row,[/(sold_?price|slutpris|price|pris)/])); const sqm=num(pick(row,[/(living_?area|boarea|sqm|kvm|area_m2|size|storlek)/])); if(price&&sqm&&sqm>8) pps=price/sqm; }
+    if(!m||!aName||!pps||pps<5000||pps>400000){ skipped++; continue; }
+    const a=ensureArea(aName); const k=m+"|"+a; (out[k]||(out[k]={month:m,area:a,vals:[],n:0})).vals.push(pps); out[k].n+= hasPPS?(n||0):1; }
+  const recs=Object.values(out).map(o=>({month:o.month,area:o.area,ppsqm:Math.round(hasPPS?mean(o.vals):median(o.vals)),n:o.n||null}));
+  if(!recs.length) throw new Error("Couldn't find month, area and price columns. Check the template.");
+  dropDemo(); const keyset=new Set(recs.map(r=>r.month+"|"+r.area)); S.prices=S.prices.filter(p=>!keyset.has(p.month+"|"+p.area)).concat(recs);
+  return `Imported ${fmt(recs.length)} area-months of prices${hasPPS?"":` from ${fmt(rows.length-skipped)} individual sales`}${skipped?` (${skipped} rows skipped)`:""}.`; }
+function importNews(text){
+  const rows=parseCSV(text); let added=0,skipped=0; const items=[];
+  for(const row of rows){ const title=pick(row,[/^(headline|title|rubrik|text|summary)/]); const date=toDate(pick(row,[/^(date|datum|published|pubdate|time|month)/]));
+    if(!title||!date){ skipped++; continue; } const aRaw=pick(row,[/^(area|område|omrade|stadsdel|neighbourhood|neighborhood)/]); const area=aRaw?ensureArea(aRaw):matchArea(title);
+    const catRaw=norm(pick(row,[/^(category|kategori|type|typ)/])||""); const cat=/pol|crime|brott/.test(catRaw)?"police":/plan|infra|bygg/.test(catRaw)?"planning":catRaw?"news":null;
+    const sc=num(pick(row,[/^(score|sentiment)/])); items.push(mkItem(date,area,String(title),pick(row,[/^(source|källa|kalla)/]),cat,sc!=null?Math.max(-1,Math.min(1,sc)):null,pick(row,[/^(url|link|länk)/]))); }
+  return addNews(items,`news rows`,skipped); }
+function importRSS(text){
+  const doc=new DOMParser().parseFromString(text,"text/xml"); if(doc.querySelector("parsererror")) throw new Error("This doesn't look like RSS XML");
+  const forced=$("dRssArea").value; const items=[]; let unmatched=0;
+  doc.querySelectorAll("item").forEach(it=>{ let title=it.querySelector("title")?.textContent||""; const src=it.querySelector("source")?.textContent||""; if(src&&title.endsWith(" - "+src)) title=title.slice(0,-(src.length+3));
+    const date=toDate(it.querySelector("pubDate")?.textContent); if(!title||!date) return; const desc=(it.querySelector("description")?.textContent||"").replace(/<[^>]+>/g," ");
+    const area=forced||matchArea(title+" "+desc); if(!area) unmatched++; items.push(mkItem(date,area,title,src||"Google News",null,null,it.querySelector("link")?.textContent)); });
+  return addNews(items,"RSS items",0,unmatched); }
+function importPolice(text){
+  let arr=JSON.parse(text); if(!Array.isArray(arr)) arr=arr.events||arr.data||[]; const items=[]; let unmatched=0,skipped=0;
+  for(const e of arr){ const type=e.type||""; if(POLICE_SKIP.test(type)){ skipped++; continue; } const date=toDate(e.datetime); if(!date){skipped++;continue;}
+    const text=(e.name||"")+" "+(e.summary||""); let area=matchArea(e.summary||"")||matchArea(e.location?.name||""); if(!area) unmatched++;
+    items.push({date,month:date.slice(0,7),area,title:(e.summary?`${type}: ${e.summary}`:e.name)||type,source:"Polisen",cat:"police",score:policeScore(type),by:"type",url:e.url?("https://polisen.se"+e.url):"",pid:e.id}); }
+  return addNews(items,"police events",skipped,unmatched); }
+function addNews(items,label,skipped,unmatched){
+  dropDemo(); const key=n=>n.pid?("p"+n.pid):(n.date+"|"+norm(n.title)); const have=new Map(S.news.map((n,i)=>[key(n),i])); let added=0,upd=0;
+  for(const it of items){ const k=key(it); if(have.has(k)){ const old=S.news[have.get(k)]; if(old.by!=="you"&&old.by!=="claude") S.news[have.get(k)]={...old,...it}; upd++; } else { S.news.push(it); have.set(k,S.news.length-1); added++; } }
+  return `Added ${fmt(added)} ${label}${upd?`, updated ${upd} already loaded`:""}${skipped?`, skipped ${skipped}`:""}.${unmatched?` ${unmatched} couldn't be matched to an area — add place names under Neighbourhoods below, or assign an area when importing.`:""}`; }
+function importMacro(text){
+  const rows=parseCSV(text); const recs=[]; for(const row of rows){ const m=toMonth(pick(row,[/^(month|månad|date|datum|period)/])); if(!m) continue;
+    recs.push({month:m,policy:num(pick(row,[/(policy|styrr|repo|riksbank)/])),mortgage:num(pick(row,[/(mortgage|bolån|bolan|3m|rorlig|rörlig)/])),cpif:num(pick(row,[/(cpif|kpif|inflation|kpi)/])),unemp:num(pick(row,[/(unemp|arbetslös|arbetslos)/]))}); }
+  if(!recs.length) throw new Error("No months found"); const mm=Object.fromEntries(S.macro.map(x=>[x.month,x]));
+  for(const r of recs){ mm[r.month]={...(mm[r.month]||{}),...Object.fromEntries(Object.entries(r).filter(([k,v])=>v!=null))}; }
+  S.macro=Object.values(mm).sort((a,b)=>a.month.localeCompare(b.month)); return `Imported ${recs.length} months of macro data.`; }
+function dropDemo(){ if(S.demo){ S.prices=[]; S.news=[]; S.demo=false; /* keep demo macro until user imports their own */ toast("Demo data cleared — showing your data"); } }
+function runImport(kind,text){
+  try{ const msg = kind==="prices"?importPrices(text):kind==="news"?importNews(text):kind==="rss"?importRSS(text):kind==="police"?importPolice(text):importMacro(text);
+    invalidate(); FC=null; pSel=null; $("dStatus").textContent=msg; refreshAll(); scheduleSave(true); }
+  catch(e){ $("dStatus").innerHTML=`<span class="neg">Couldn't import: ${esc(e.message)}</span>`; } }
+function guessKind(name,text){ const t=text.trimStart(); if(/\.json$/i.test(name)||t.startsWith("[")||t.startsWith("{")) return "police"; if(/\.(xml|rss)$/i.test(name)||t.startsWith("<")) return "rss"; return null; }
+async function handleFiles(files){ for(const f of files){ const text=await f.text(); const g=guessKind(f.name,text); const k=g||$("dKind").value; if(g&&g!==$("dKind").value){ $("dKind").value=g; updRssVis(); } runImport(k,text); } }
+function renderSummary(){
+  const pm=[...new Set(S.prices.map(p=>p.month))].sort(), nm=[...new Set(S.news.map(n=>n.month).filter(Boolean))].sort(), mm=S.macro.map(m=>m.month).sort();
+  const span=a=>a.length?`${a[0]} → ${a[a.length-1]}`:"–";
+  $("dSummary").innerHTML=`<tr><th>Dataset</th><th class="n">Rows</th><th>Months</th></tr>
+   <tr><td>Prices</td><td class="n">${fmt(S.prices.length)}</td><td>${span(pm)}</td></tr>
+   <tr><td>News &amp; planning</td><td class="n">${fmt(S.news.filter(n=>n.cat!=="police").length)}</td><td>${span(nm)}</td></tr>
+   <tr><td>Police incidents</td><td class="n">${fmt(S.news.filter(n=>n.cat==="police").length)}</td><td></td></tr>
+   <tr><td>Unassigned items</td><td class="n">${fmt(S.news.filter(n=>!n.area).length)}</td><td></td></tr>
+   <tr><td>Macro</td><td class="n">${fmt(S.macro.length)}</td><td>${span(mm)}</td></tr>`;
+  $("aliasBox").value=S.areas.map(a=>`${a}: ${(S.aliases[a]||[]).join(", ")}`).join("\n");
+  fillAreaSelect($("dRssArea"),{newsAreas:true}); $("dRssArea").insertAdjacentHTML("afterbegin",`<option value="">Auto-detect from text</option>`); if(!$("dRssArea").dataset.v) $("dRssArea").value=""; else $("dRssArea").value=$("dRssArea").dataset.v;
+  $("rssLinks").innerHTML=["Södermalm","Hammarby sjöstad","Rinkeby"].map(a=>`<a href="https://news.google.com/rss/search?q=${encodeURIComponent('"'+a+'"')}&hl=sv&gl=SE&ceid=SE:sv" target="_blank" rel="noopener">${a}</a>`).join(", ")+" (edit the q= part for other areas).";
+}
+function updRssVis(){ $("dRssAreaL").style.display=$("dKind").value==="rss"||$("dKind").value==="news"?"":"none"; }
+
+/* ================= Claude scoring ================= */
+async function scoreWithClaude(){
+  if(!sampleFn) return; const pool=newsFiltered().filter(n=>n.by!=="claude"&&n.by!=="you"&&n.cat!=="police").slice(0,60);
+  if(!pool.length){ $("nStatus").textContent="Nothing left to score in this filter (police items are scored by incident type)."; return; }
+  $("nClaude").disabled=true; $("nStatus").textContent=`Asking Claude to score ${pool.length} headlines…`;
+  const prompt=`You rate Swedish local news headlines for how they are likely to affect the attractiveness, and so housing demand, of the neighbourhood they concern, in Stockholm.
+Neighbourhoods (use exactly these names, or null if none fits): ${S.areas.join("; ")}.
+For each headline return: i (the index given), score from -1 (very negative for the area) to 1 (very positive), cat ("news", "planning" for construction/transport/schools/parks/urban development, or "police" for crime reports), area.
+Return ONLY a JSON array like [{"i":0,"score":-0.6,"cat":"news","area":"Södermalm"}].
+Headlines:
+${pool.map((n,i)=>`${i}. ${n.title}${n.area?` [currently: ${n.area}]`:""}`).join("\n")}`;
+  try{ const out=await sampleFn.json(prompt,{modelTier:"quick"}); const arr=Array.isArray(out)?out:(out&&out.items)||[]; let k=0;
+    for(const o of arr){ const n=pool[o.i]; if(!n) continue; const sc=num(o.score); if(sc!=null){ n.score=Math.max(-1,Math.min(1,Math.round(sc*100)/100)); n.by="claude"; k++; }
+      if(["news","planning","police"].includes(o.cat)) n.cat=o.cat; if(o.area&&S.areas.includes(o.area)) n.area=o.area; }
+    $("nStatus").textContent=`Claude scored ${k} headlines.${newsFiltered().some(n=>n.by!=="claude"&&n.by!=="you"&&n.cat!=="police")?" Press again for the next batch.":""}`; invalidate(); FC=null; renderNews(); scheduleSave(); }
+  catch(e){ $("nStatus").innerHTML=`<span class="neg">${e&&e.code==="not_granted"?"Claude scoring isn't available in this view.":e&&e.code==="rate_limited"?"Too many requests — wait a minute and try again.":"Claude couldn't score these: "+esc(e&&e.message||e)}</span>`; if(e&&e.code==="not_granted") $("nClaude").style.display="none"; }
+  finally{ $("nClaude").disabled=false; } }
+
+/* ================= persistence ================= */
+const CHUNK=90000; let saveTimer=null, saving=false;
+function scheduleSave(now){ if(!db||!uid||!$("sAuto").checked) return; clearTimeout(saveTimer); saveTimer=setTimeout(saveAll, now?300:2500); }
+async function saveAll(){
+  if(!db||!uid){ $("sStatus").textContent="Saving needs you to be signed in to Claude."; return; } if(saving){ scheduleSave(); return; } saving=true; $("sStatus").textContent="Saving…";
+  try{ const col=db.collection("data/users/"+uid); const parts={};
+    const pack={prices:S.demo?[]:S.prices.map(p=>[p.month,p.area,p.ppsqm,p.n]),news:S.demo?[]:S.news.map(n=>[n.date,n.area,n.title,n.source,n.cat,n.score,n.by,n.url,n.pid||null]),macro:S.macro.map(m=>[m.month,m.policy,m.mortgage,m.cpif,m.unemp])};
+    for(const k in pack){ const s=JSON.stringify(pack[k]); const n=Math.max(1,Math.ceil(s.length/CHUNK)); parts[k]=n; for(let i=0;i<n;i++) await col.doc(`${k}_${i}`).set({s:s.slice(i*CHUNK,(i+1)*CHUNK)}); }
+    await col.doc("meta").set({v:1,parts,demo:S.demo,aliases:S.areas.map(a=>[a,(S.aliases[a]||[]).join(", ")]),savedAt:new Date().toISOString()});
+    $("sStatus").textContent=`Saved ${new Date().toLocaleTimeString("sv-SE",{hour:"2-digit",minute:"2-digit"})}.`; }
+  catch(e){ $("sStatus").innerHTML=`<span class="neg">Couldn't save (${esc(e.code||e.message)}).${e.code==="quota_exceeded"?" Storage is full — clear some news items.":""}</span>`; }
+  finally{ saving=false; } }
+async function loadSaved(){
+  const col=db.collection("data/users/"+uid); const timer=setTimeout(()=>{$("sStatus").textContent="Saved data can't be reached yet — showing demo data.";},10000);
+  try{ const meta=await col.doc("meta").get(); clearTimeout(timer); if(!meta.exists){ $("sStatus").textContent="Nothing saved yet. Import data and it will be saved here."; return; }
+    const m=meta.data(); const get=async k=>{ let s=""; for(let i=0;i<(m.parts[k]||0);i++){ const d=await col.doc(`${k}_${i}`).get(); if(d.exists) s+=d.data().s; } return s?JSON.parse(s):[]; };
+    const [pr,nw,mc]=await Promise.all([get("prices"),get("news"),get("macro")]);
+    if(m.aliases) setAliases(m.aliases);
+    if(pr.length||nw.length){ S.prices=pr.map(r=>({month:r[0],area:r[1],ppsqm:r[2],n:r[3]})); S.news=nw.map(r=>({date:r[0],month:r[0]?r[0].slice(0,7):null,area:r[1],title:r[2],source:r[3],cat:r[4],score:r[5],by:r[6],url:r[7],pid:r[8]||undefined})); S.demo=false; for(const p of S.prices) ensureArea(p.area); }
+    if(mc.length) S.macro=mc.map(r=>({month:r[0],policy:r[1],mortgage:r[2],cpif:r[3],unemp:r[4]}));
+    invalidate(); FC=null; pSel=null; refreshAll(); $("sStatus").textContent=`Loaded your saved data (saved ${new Date(m.savedAt).toLocaleString("sv-SE",{dateStyle:"short",timeStyle:"short"})}).`; }
+  catch(e){ clearTimeout(timer); $("sStatus").innerHTML=`<span class="neg">Couldn't load saved data (${esc(e.code||e.message)}).</span>`; } }
+async function initCaps(){
+  if(!window.claude||!window.claude.use){ $("sStatus").textContent="Saving is available when this page is opened on claude.ai."; $("sSave").disabled=true; return; }
+  try{ const [d,u,s]=await Promise.all([claude.use("db"),claude.use("user"),claude.use("sample")]); sampleFn=s; $("nClaude").style.display=s?"":"none";
+    if(d&&u){ uid=await u.id(); db=d; } if(db&&uid){ $("sSave").disabled=false; await loadSaved(); } else { $("sStatus").textContent="Sign in to Claude to save your data between visits."; $("sSave").disabled=true; } }
+  catch(e){ $("sStatus").textContent="Saving isn't available in this view."; } }
+
+/* ================= wiring ================= */
+let current="overview";
+function show(t){ current=t; document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t)); document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===t));
+  try{ if(location.hash!=="#"+t) history.replaceState(null,"","#"+t);}catch(e){} renderCurrent(); }
+function renderCurrent(){ try{ ({overview:renderOverview,prices:renderPrices,news:renderNews,corr:renderCorr,fc:()=>renderForecast(false),data:renderSummary})[current](); }catch(e){ console.error(e); } }
+function refreshAll(){ $("demoBanner").style.display=S.demo?"":"none"; renderCurrent(); if(current!=="data") renderSummary(); }
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+document.querySelectorAll("[data-goto]").forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.goto);});
+window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(h&&h!==current&&$(h)&&$(h).tagName==="SECTION") show(h); });
+["pMode","pFrom","pSmooth","pRate"].forEach(id=>$(id).onchange=renderPrices);
+$("pChips").onclick=e=>{ const c=e.target.closest(".chip"); if(!c) return; const a=c.dataset.a; pSel.has(a)?pSel.delete(a):pSel.add(a); renderPrices(); };
+$("pAll").onclick=()=>{ derive().areas.forEach(a=>pSel.add(a)); renderPrices(); }; $("pNone").onclick=()=>{ pSel.clear(); pSel.add("__none__"); renderPrices(); pSel.delete("__none__"); };
+["nArea","nCat"].forEach(id=>$(id).onchange=renderNews); let qT; $("nQ").oninput=()=>{clearTimeout(qT);qT=setTimeout(renderNews,250);};
+$("nClaude").onclick=scoreWithClaude;
+$("nRescore").onclick=()=>{ let k=0; for(const n of S.news){ if(n.cat==="police"||n.by==="you"||n.by==="claude"||n.by==="file") continue; n.score=scoreText(n.title); n.by="words"; k++; } invalidate(); FC=null; renderNews(); $("nStatus").textContent=`Re-scored ${k} items with the word list (your edits, Claude's scores and scores from your files were kept).`; scheduleSave(); };
+["kSig","kWin","kH","kArea"].forEach(id=>$(id).onchange=()=>{ delete $("kLag").dataset.touched; renderCorr(); }); $("kLag").onchange=()=>{ $("kLag").dataset.touched=1; renderCorr(); };
+$("fRun").onclick=()=>renderForecast(true); ["fArea","fH","fLag","fShock"].forEach(id=>$(id).onchange=()=>renderForecast(false)); $("fRate").onchange=()=>renderForecast(false);
+$("fCopy").onclick=async()=>{ if(!FC||!FC.rows) return; const csv="area,now_kr_kvm,median_kr_kvm,change,p10,p90\n"+FC.rows.map(r=>[r.a,Math.round(r.now),Math.round(r.price),r.mid.toFixed(4),r.lo.toFixed(4),r.hi.toFixed(4)].join(",")).join("\n"); try{ await navigator.clipboard.writeText(csv); toast("Forecast copied as CSV"); }catch(e){ toast("Copy was blocked by the browser"); } };
+document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{ try{ await navigator.clipboard.writeText($(b.dataset.copy).textContent); toast("Template copied"); }catch(e){ toast("Copy was blocked by the browser"); } });
+$("dKind").onchange=updRssVis; $("dRssArea").onchange=()=>$("dRssArea").dataset.v=$("dRssArea").value;
+$("dFile").onchange=e=>{ handleFiles([...e.target.files]); e.target.value=""; };
+const drop=$("drop"); drop.ondragover=e=>{e.preventDefault();drop.classList.add("over");}; drop.ondragleave=()=>drop.classList.remove("over"); drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");handleFiles([...e.dataTransfer.files]);};
+$("dPasteBtn").onclick=()=>{ const t=$("dPaste").value; if(!t.trim()) return; const g=guessKind("",t); if(g&&$("dKind").value!=="news"&&$("dKind").value!=="prices"&&$("dKind").value!=="macro"){} runImport(g&&!["prices","news","macro"].includes($("dKind").value)?g:(g||$("dKind").value),t); };
+$("dDemo").onclick=()=>{ setAliases(DEFAULT_AREAS); genDemo(); invalidate(); FC=null; pSel=null; $("dStatus").textContent="Demo data loaded (not saved to your account)."; refreshAll(); };
+let clearArmed=false; $("dClear").onclick=()=>{ if(!clearArmed){ clearArmed=true; $("dClear").textContent="Click again to confirm"; setTimeout(()=>{clearArmed=false;$("dClear").textContent="Clear all data";},3000); return; }
+  clearArmed=false; $("dClear").textContent="Clear all data"; S.prices=[]; S.news=[]; S.macro=[]; S.demo=false; invalidate(); FC=null; pSel=null; $("dStatus").textContent="All data cleared."; refreshAll(); scheduleSave(true); };
+$("sSave").onclick=saveAll;
+$("aliasSave").onclick=()=>{ const lines=$("aliasBox").value.split("\n").map(l=>l.trim()).filter(Boolean); const list=lines.map(l=>{ const i=l.indexOf(":"); return i<0?[l,""]:[l.slice(0,i).trim(),l.slice(i+1)]; });
+  setAliases(list); for(const p of S.prices) ensureArea(p.area); let k=0; for(const n of S.news){ if(!n.area){ const a=matchArea(n.title); if(a){ n.area=a; k++; } } } invalidate(); FC=null; $("dStatus").textContent=`Neighbourhoods updated. ${k} previously unassigned items now matched.`; renderSummary(); scheduleSave(); };
+
+/* ================= boot ================= */
+setAliases(DEFAULT_AREAS); genDemo(); updRssVis();
+const h0=location.hash.slice(1); show(h0&&$(h0)&&$(h0).tagName==="SECTION"?h0:"overview"); renderSummary();
+window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",renderCurrent);
+initCaps();
+</script>
+</body>
+</html>
