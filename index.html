@@ -22,11 +22,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 Inter,"Helvet
 .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .brand .mark{background:var(--red);color:#fff;font-weight:900;font-size:13px;letter-spacing:.14em;padding:4px 8px;text-transform:uppercase}
 h1{font-size:30px;font-weight:900;margin:0;letter-spacing:-.025em;line-height:1.1}
-.slogan{margin:10px 0 0;font-size:19px;font-weight:800;letter-spacing:-.01em;color:#fff}
+.slogan{margin:10px 0 18px;font-size:19px;font-weight:800;letter-spacing:-.01em;color:#fff}
 .slogan::before{content:"";display:inline-block;width:22px;height:3px;background:var(--red);vertical-align:middle;margin-right:10px}
 .sub{color:#bdbdbd;margin:6px 0 18px;max-width:780px}
-nav{display:flex;gap:0;overflow-x:auto}
-nav button{background:none;border:0;padding:12px 16px 11px;font:inherit;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a8a8a8;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav{display:flex;gap:0;flex-wrap:wrap}
+nav button{background:none;border:0;padding:12px 11px 11px;font:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#a8a8a8;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
 nav button:hover{color:#fff}
 nav button.on{color:#fff;border-bottom-color:var(--red)}
 main{max-width:1280px;margin:0 auto;padding:24px 24px 64px}
@@ -116,13 +116,14 @@ input[type=range]{accent-color:#e62b1e}
 .mres ul{margin:4px 0 0;padding-left:16px;font-size:12.5px}
 .mres li.no{color:var(--red)}
 .score{font-weight:900;font-variant-numeric:tabular-nums}
+.srcT td{font-size:12.5px}
+.srcT td:first-child{font-weight:700}
 </style>
 </head>
 <body>
 <header class="topbar"><div class="in">
   <div class="brand"><span class="mark">Stockholm</span><h1>Property Signals</h1></div>
-  <p class="slogan">Know the neighbourhood before you buy it.</p>
-  <p class="sub">Compare all 25 Stockholm neighbourhoods side by side: prices and where they're heading, commute times, schools, who lives there and how they vote. Everything comes from official, open data, so you can find the area that fits your life before you book a single viewing.</p>
+  <p class="slogan">Find your place in Stockholm.</p>
   <nav id="tabs">
     <button data-t="overview" class="on">Overview</button>
     <button data-t="map">Map &amp; commute</button>
@@ -133,6 +134,7 @@ input[type=range]{accent-color:#e62b1e}
     <button data-t="corr">Correlation</button>
     <button data-t="fc">Forecast</button>
     <button data-t="data">Data &amp; sources</button>
+    <button data-t="about">About</button>
   </nav>
 </div></header>
 <main>
@@ -316,6 +318,51 @@ input[type=range]{accent-color:#e62b1e}
       <div class="scroll"><table id="fTable"></table></div>
     </div>
     <p class="note">This is a statistical model, not financial advice. It extrapolates relationships seen in past data; it cannot foresee shocks such as rule changes or a sudden rate move, and wide ranges are honest about that.</p>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="grid g2" style="align-items:start">
+      <div class="card">
+        <h3 style="font-size:22px;font-weight:900">About Stockholm Property Signals</h3>
+        <p class="hint" style="font-size:13.5px">Find your place in Stockholm.</p>
+        <div class="dsec">
+          <h5>Why this exists</h5>
+          <p>Choosing where to live in Stockholm usually means piecing things together from estate agents' listings, price sites, school rankings, the SL app and word of mouth. Stockholm Property Signals brings it all into one place: what homes cost and how prices are moving, how long the commute is, how good the schools are, who lives in each area and what is happening there. You can compare all 25 areas on equal terms before you book a single viewing.</p>
+          <p>It is also a research tool. It asks whether local news (good or bad), police incidents and planning decisions show up in house prices, and whether that helps forecast where prices go next. So far the honest answer is that news <i>reflects</i> an area more than it <i>predicts</i> price moves — see the Correlation and Forecast tabs.</p>
+          <h5>What's inside</h5>
+          <p><b>Map &amp; commute</b> — all areas on one map, with travel times to T-Centralen by public transport, car and bike.<br>
+          <b>Where should I live?</b> — tell it your budget, household and priorities and get a ranked shortlist with reasons.<br>
+          <b>Neighbourhoods</b> — a profile of each area: character, who it suits, housing, people, schools, politics and news.<br>
+          <b>Prices, News, Correlation, Forecast</b> — the market data and the analysis behind it.</p>
+          <h5>How the areas are defined</h5>
+          <p>Stockholm city is split into the 12 districts used by Svensk Mäklarstatistik, which follow the city's old parish boundaries (for example, Gamla stan belongs to Vasastan-Norrmalm and Blackeberg to Bromma-Västerled). The 13 surrounding municipalities are shown as whole municipalities. Statistics for Stockholm's districts are built up from SCB's 127 small areas (RegSO), and election results from the city's polling districts.</p>
+          <h5>Good to know</h5>
+          <p>This is an independent analysis tool, not financial or investment advice. Forecasts are statistical estimates with wide uncertainty. Area averages hide big differences between streets. The written neighbourhood overviews are summaries generated by Claude (Anthropic's AI) from the data and general knowledge, not official descriptions. Prices are average bostadsrätt (apartment) prices per m²; villa prices are not yet included.</p>
+          <p>Built with Claude. Code and data files: <a href="https://github.com/danielengerby1/stockholm-property-signals" target="_blank" rel="noopener">github.com/danielengerby1/stockholm-property-signals</a></p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Where the data comes from</h3>
+        <p class="hint">All built-in data comes from free, public sources. Collected 3 November 2026.</p>
+        <table class="srcT">
+          <tr><th>Data</th><th>Source</th><th>Coverage</th></tr>
+          <tr><td>Apartment prices (kr/kvm, number sold)</td><td><a href="https://www.maklarstatistik.se" target="_blank" rel="noopener">Svensk Mäklarstatistik</a></td><td>Monthly Oct 2022 – Sep 2026; annual from 1996/2005. Källa: Svensk Mäklarstatistik AB.</td></tr>
+          <tr><td>Policy rate</td><td><a href="https://www.riksbank.se/sv/statistik/rantor-och-valutakurser/" target="_blank" rel="noopener">Sveriges Riksbank</a></td><td>Monthly from 2015</td></tr>
+          <tr><td>Population, age, households, house type, tenure, building age, education</td><td><a href="https://www.statistikdatabasen.scb.se" target="_blank" rel="noopener">SCB – Statistics Sweden</a></td><td>2025; small areas (RegSO) and municipalities</td></tr>
+          <tr><td>Income</td><td>SCB – Statistics Sweden</td><td>Median disposable income, ages 20–64, 2023</td></tr>
+          <tr><td>Election results</td><td><a href="https://resultat.val.se/val2026" target="_blank" rel="noopener">Valmyndigheten</a></td><td>Riksdag election 13 Sep 2026 (final), change since 2022</td></tr>
+          <tr><td>School results</td><td><a href="https://www.skolverket.se" target="_blank" rel="noopener">Skolverket</a></td><td>Year-9 merit value, share eligible for upper secondary (SALSA), 738 schools</td></tr>
+          <tr><td>Public transport times</td><td><a href="https://www.trafiklab.se" target="_blank" rel="noopener">SL journey planner via Trafiklab</a></td><td>Fastest trip arriving T-Centralen 08:00, weekday</td></tr>
+          <tr><td>Car and bike times</td><td><a href="https://project-osrm.org" target="_blank" rel="noopener">OSRM</a> and <a href="https://routing.openstreetmap.de" target="_blank" rel="noopener">FOSSGIS routing</a> on OpenStreetMap</td><td>Car without traffic; bike ~15 km/h</td></tr>
+          <tr><td>Map boundaries</td><td>SCB (RegSO 2025); <a href="https://github.com/okfse/sweden-geojson" target="_blank" rel="noopener">okfse/sweden-geojson</a></td><td>Map data © OpenStreetMap contributors</td></tr>
+          <tr><td>News headlines</td><td><a href="https://news.google.com" target="_blank" rel="noopener">Google News</a> (links to the original publishers)</td><td>31 869 headlines, Oct 2021 – Nov 2026; scored with a Swedish word list</td></tr>
+          <tr><td>Police incidents</td><td><a href="https://polisen.se/aktuellt/handelser/" target="_blank" rel="noopener">Polisen</a> open events API</td><td>Published events May – Nov 2026 (not complete crime statistics)</td></tr>
+          <tr><td>Neighbourhood overviews</td><td>Written by Claude</td><td>Based on the data above and general knowledge</td></tr>
+        </table>
+        <p class="note" style="margin-top:10px">More detail on each dataset, and how to refresh it, is in the <a href="https://github.com/danielengerby1/stockholm-property-signals/tree/main/data" target="_blank" rel="noopener">data folder on GitHub</a>. To add your own data, use the Data &amp; sources tab.</p>
+      </div>
+    </div>
   </section>
 
   <!-- DATA -->
@@ -1181,7 +1228,7 @@ function renderMatchTab(){ if(!matchInit){ matchInit=true; Object.assign(Q.w,PRE
 let current="overview";
 function show(t){ current=t; document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t)); document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===t));
   try{ if(location.hash!=="#"+t) history.replaceState(null,"","#"+t);}catch(e){} renderCurrent(); }
-function renderCurrent(){ try{ ({overview:renderOverview,map:renderMap,match:renderMatchTab,areas:renderAreas,prices:renderPrices,news:renderNews,corr:renderCorr,fc:()=>renderForecast(false),data:renderSummary})[current](); }catch(e){ console.error(e); } }
+function renderCurrent(){ try{ ({about:()=>{},overview:renderOverview,map:renderMap,match:renderMatchTab,areas:renderAreas,prices:renderPrices,news:renderNews,corr:renderCorr,fc:()=>renderForecast(false),data:renderSummary})[current](); }catch(e){ console.error(e); } }
 function refreshAll(){ banner(); renderCurrent(); if(current!=="data") renderSummary(); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
 document.querySelectorAll("[data-goto]").forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.goto);});
