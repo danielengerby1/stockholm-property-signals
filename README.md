@@ -23,4 +23,4 @@ The data is imported as files. The page doesn't fetch any websites itself.
 ## Run locally
 Open `index.html` in a browser. Chart.js and PapaParse load from a CDN. Saving data and scoring with Claude work only in the hosted version on claude.ai.
 
-The built-in demo data is synthetic. Its news effect is deliberately built in to show how the analysis works.
+The app loads real data by default: Svensk Mäklarstatistik prices for 25 Stockholm districts and municipalities, plus the Riksbank policy rate. See [`data/`](data/README.md) for sources and how to refresh them. Synthetic demo data is still available under Data & sources, with a deliberately built-in news effect for trying out the analysis.
