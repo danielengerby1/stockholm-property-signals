@@ -30,6 +30,11 @@ All of this data is also built into `index.html`, and the app loads it by defaul
 
 Not yet included: counts of restaurants, bars and playgrounds from OpenStreetMap (Overpass was unreachable from the browser used); Brå crime statistics; housing-association (BRF) finances.
 
+## Taxes and fees
+
+- `taxes_2026.json` — per area: municipal and region income tax, burial fee, total excluding church fee, church fee by parish (Svenska kyrkan members only), and the 2025 municipal + region total for comparison. Source: Skatteverket's open dataset "Skattesatser per församling" (2026), cross-checked against SCB's municipal tax table. Stockholm city's 12 districts share one rate; the parishes give the church fee range.
+- National rules shown in the app (property fee caps, lagfart, pantbrev, capital gains, interest deduction) come from Skatteverket and Lantmäteriet and are the same in every area.
+
 ## Refreshing the data
 Mäklarstatistik updates around the 8th of each month. Open their Stockholm page in a browser, paste `fetch_maklarstatistik.js` into the developer console and press Enter. The script downloads fresh CSV files, which you then drop into the app.
 

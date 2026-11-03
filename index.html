@@ -166,6 +166,7 @@ input[type=range]{accent-color:#e62b1e}
             <option value="hh_kids">Households with children</option>
             <option value="young">Young adults 20–34</option>
             <option value="merit">School results (year 9 merit value)</option>
+            <option value="tax">Municipal tax + burial fee 2026 (%)</option>
             <option value="party">Largest party 2026</option>
           </select></label>
           <span class="chips" style="margin:0"><span class="chip on" data-z="city">Inner city</span><span class="chip" data-z="region">Whole region</span></span>
@@ -227,6 +228,27 @@ input[type=range]{accent-color:#e62b1e}
       <div class="agrid" id="aGrid"></div>
     </div>
     <div class="card" id="aDetail" style="margin-top:14px;display:none"></div>
+    <div class="card" style="margin-top:14px">
+      <div class="ctl" style="justify-content:space-between"><div><h3>Taxes &amp; fees by area (2026)</h3><p class="hint" style="margin:0">Income tax to the municipality and region, plus the burial fee, is set by where you are registered (folkbokförd) on 1 November the year before. Church fee applies only to members of the Church of Sweden and varies by parish.</p></div>
+        <label>Your monthly salary <input type="number" id="tSalary" value="50000" step="5000" style="width:100px"> kr</label></div>
+      <div class="grid g2" style="align-items:start">
+        <div class="scroll"><table id="tTable"></table></div>
+        <div class="dsec">
+          <h5>What the difference means</h5><p id="tExample"></p>
+          <h5>The same everywhere (national rules, 2026)</h5>
+          <table class="srcT">
+            <tr><td>Property fee — house (kommunal fastighetsavgift)</td><td>0.75% of the tax assessment value, at most <b>10 425 kr/year</b>. New houses (value year 2012 or later) pay nothing for 15 years.</td></tr>
+            <tr><td>Property fee — bostadsrätt</td><td>Paid by the housing association (BRF), at most <b>1 784 kr per apartment</b>, and included in the monthly fee.</td></tr>
+            <tr><td>Stamp duty — house (lagfart)</td><td><b>1.5%</b> of the price (or assessment value if higher) <b>+ 825 kr</b>. Not charged on bostadsrätter.</td></tr>
+            <tr><td>New mortgage deeds (pantbrev)</td><td><b>2%</b> of new mortgage deeds <b>+ 375 kr</b>; existing deeds in the house can be reused. Not charged on bostadsrätter.</td></tr>
+            <tr><td>Capital gains tax when selling</td><td><b>22%</b> of the gain, for houses and bostadsrätter alike.</td></tr>
+            <tr><td>Mortgage interest deduction</td><td><b>30%</b> of interest up to 100 000 kr a year, 21% above that.</td></tr>
+            <tr><td>State income tax</td><td>20% on taxable income above the national threshold — identical in every area.</td></tr>
+          </table>
+          <p class="note">Rates: Skatteverket (skattesatser per församling 2026) and SCB. National rules: Skatteverket and Lantmäteriet. Figures are simplified and before tax credits such as the jobbskatteavdrag; this is not tax advice.</p>
+        </div>
+      </div>
+    </div>
     <p class="note" id="aSources">Sources: <b>population, households, housing, tenure, building age and education</b> from SCB (Statistics Sweden), 2025, summed from RegSO small areas for Stockholm's districts and municipality totals for the others. <b>Income</b>: SCB, median disposable income for ages 20–64, 2023 (population-weighted across small areas). <b>Elections</b>: Valmyndigheten, final results of the Riksdag election 13 Sep 2026, with change from 2022; for Stockholm's districts, polling districts are grouped by parish, the same parishes Mäklarstatistik's districts are built from. <b>Prices</b>: Svensk Mäklarstatistik, bostadsrätter. The written overviews are summaries by Claude based on these figures and general knowledge about the areas; they are not official descriptions.</p>
   </section>
 
@@ -356,6 +378,7 @@ input[type=range]{accent-color:#e62b1e}
           <tr><td>Public transport times</td><td><a href="https://www.trafiklab.se" target="_blank" rel="noopener">SL journey planner via Trafiklab</a></td><td>Fastest trip arriving T-Centralen 08:00, weekday</td></tr>
           <tr><td>Car and bike times</td><td><a href="https://project-osrm.org" target="_blank" rel="noopener">OSRM</a> and <a href="https://routing.openstreetmap.de" target="_blank" rel="noopener">FOSSGIS routing</a> on OpenStreetMap</td><td>Car without traffic; bike ~15 km/h</td></tr>
           <tr><td>Map boundaries</td><td>SCB (RegSO 2025); <a href="https://github.com/okfse/sweden-geojson" target="_blank" rel="noopener">okfse/sweden-geojson</a></td><td>Map data © OpenStreetMap contributors</td></tr>
+          <tr><td>Income tax, burial and church fees</td><td><a href="https://skatteverket.entryscape.net/rowstore/dataset/c67b320b-ffee-4876-b073-dd9236cd2a99/html" target="_blank" rel="noopener">Skatteverket</a> (per parish) and SCB</td><td>2026 rates; national property and stamp-duty rules from Skatteverket and Lantmäteriet</td></tr>
           <tr><td>News headlines</td><td><a href="https://news.google.com" target="_blank" rel="noopener">Google News</a> (links to the original publishers)</td><td>31 869 headlines, Oct 2021 – Nov 2026; scored with a Swedish word list</td></tr>
           <tr><td>Police incidents</td><td><a href="https://polisen.se/aktuellt/handelser/" target="_blank" rel="noopener">Polisen</a> open events API</td><td>Published events May – Nov 2026 (not complete crime statistics)</td></tr>
           <tr><td>Neighbourhood overviews</td><td>Written by Claude</td><td>Based on the data above and general knowledge</td></tr>
@@ -1073,11 +1096,11 @@ function renderAreas(){
   $("aGrid").innerHTML=list.map(a=>{ const x=AREA_STATS[a], p=areaPriceInfo(a); const top=x.votes&&x.votes[0];
     return `<div class="acard ${aSel===a?"sel":""}" data-a="${esc(a)}"><h4>${esc(a)}</h4><div class="sm">${esc((AREA_TEXT[a].includes||"").split(",").slice(0,3).join(", "))}…</div>
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px"><span class="pv">${p?fmt(p.now/1000,0)+"k":"–"}<span class="sm" style="font-weight:600"> kr/kvm</span></span><span class="${p&&p.c48<0?"neg":"pos"}" style="font-size:13px">${p?pct(p.c48,0):""} <span class="sm">since ’22</span></span></div>
-      <div class="sm" style="margin-top:4px">${fmt(x.pop)} residents · income ${fmt(x.inc/1000)}k · ${top?"largest: <b>"+top[0]+"</b> "+top[1]+"%":""}</div>
+      <div class="sm" style="margin-top:4px">${fmt(x.pop)} residents · income ${fmt(x.inc/1000)}k · tax ${TAXES[a].total_excl_church.toFixed(2)}% · ${top?"largest: <b>"+top[0]+"</b> "+top[1]+"%":""}</div>
       <div>${areaTags(a).slice(0,4).map(t=>`<span class="tag ${t[2]?"r":""}">${esc(t[0])}</span>`).join("")}</div></div>`; }).join("") || `<p class="note">No areas match.</p>`;
   $("aGrid").querySelectorAll(".acard").forEach(c=>c.onclick=()=>{ aSel=c.dataset.a; renderAreas(); setTimeout(()=>$("aDetail").scrollIntoView({behavior:"smooth",block:"start"}),50); });
   $("aTags").querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ aTag=c.dataset.tag||null; renderAreas(); });
-  renderAreaDetail(); }
+  renderAreaDetail(); renderTaxes(); }
 function statRow(label,v,city,fmtf,max){ const w=Math.max(0,Math.min(100,v/max*100)), cw=Math.max(0,Math.min(100,city/max*100));
   return `<div class="stat"><span>${label}</span><span class="v">${fmtf(v)}</span><div class="bar" title="City average: ${fmtf(city)}"><i style="width:${w}%"></i><b style="left:${cw}%"></b></div></div>`; }
 function stackBar(parts){ const tot=parts.reduce((s,p)=>s+p[1],0)||1;
@@ -1126,6 +1149,7 @@ function renderAreaDetail(){
       <h5>Residential buildings by year built</h5>
       ${stackBar([["Before 1941",x.pre1941,"#111"],["1941–70",x.y41_70,"#6e6e6e"],["1971–2000",x.y71_00,"#bdbdbd"],["2001–",x.post2001,"#e62b1e"]])}
       <p class="legend">Share of residential buildings (each villa counts as one building, like each apartment block).</p>
+      ${taxProfileHtml(a)}
       <h5>Riksdag election 2026${x.turnout?` — turnout ${x.turnout}%`:""}</h5>
       ${votes.length?`<div class="chartbox sm" style="height:${votes.length*26+30}px"><canvas id="cVotes"></canvas></div><p class="legend">Bars: share of votes 2026. Label: change in percentage points since 2022. Largest party: <b>${PARTY_NAME[votes[0][0]]||votes[0][0]}</b>.</p>`:"<p class='note'>No election data.</p>"}
     </div>
@@ -1145,11 +1169,11 @@ let mZoom="city", mSel=null;
 const VIEW={city:[17.86,59.235,18.25,59.425], region:[17.66,58.98,18.95,59.53]};
 function proj(view,W){ const [x0,y0,x1,y1]=view; const k=Math.cos(59.33*Math.PI/180); const H=W*((y1-y0)/((x1-x0)*k)); return {W,H,f:(lon,lat)=>[ (lon-x0)/(x1-x0)*W, (y1-lat)/(y1-y0)*H ]}; }
 function areaMetric(a,m){ const x=AREA_STATS[a]||{}, c=COMMUTE[a]||{}, sc=SCHOOLS[a]||{};
-  if(m in c) return c[m]; if(m==="merit") return sc.merit; if(m==="ppsqm"){ const p=areaPriceInfo(a); return p?p.now:null; } if(m==="chg48"){ const p=areaPriceInfo(a); return p?p.c48*100:null; } if(m==="inc") return x.inc; if(m==="party") return x.votes&&x.votes[0]&&x.votes[0][0]; return x[m]; }
-const M_INFO={pt_min:["min",true],car_min:["min",true],bike_min:["min",true],km:["km",true],ppsqm:["kr/kvm",false],chg48:["%",false],inc:["kr",false],hh_kids:["%",false],young:["%",false],merit:["",false]};
+  if(m in c) return c[m]; if(m==="merit") return sc.merit; if(m==="ppsqm"){ const p=areaPriceInfo(a); return p?p.now:null; } if(m==="chg48"){ const p=areaPriceInfo(a); return p?p.c48*100:null; } if(m==="inc") return x.inc; if(m==="party") return x.votes&&x.votes[0]&&x.votes[0][0]; if(m==="tax") return TAXES[a]&&TAXES[a].total_excl_church; return x[m]; }
+const M_INFO={pt_min:["min",true],car_min:["min",true],bike_min:["min",true],km:["km",true],ppsqm:["kr/kvm",false],chg48:["%",false],inc:["kr",false],hh_kids:["%",false],young:["%",false],merit:["",false],tax:["%",true]};
 function rampColor(t){ // white -> red -> black
   const a=[255,255,255], b=[230,43,30], c=[17,17,17]; const mix=(p,q,u)=>p.map((v,i)=>Math.round(v+(q[i]-v)*u)); const col=t<.6? mix([253,236,234],b,t/.6) : mix(b,c,(t-.6)/.4); return `rgb(${col.join(",")})`; }
-function fmtMetric(m,v){ if(v==null) return "–"; if(m==="ppsqm"||m==="inc") return fmt(v); if(m==="chg48") return (v>0?"+":"")+v.toFixed(1)+"%"; if(m==="km") return v.toFixed(1)+" km"; if(m==="hh_kids"||m==="young") return v.toFixed(0)+"%"; if(m.endsWith("_min")) return v+" min"; return String(v); }
+function fmtMetric(m,v){ if(v==null) return "–"; if(m==="ppsqm"||m==="inc") return fmt(v); if(m==="chg48") return (v>0?"+":"")+v.toFixed(1)+"%"; if(m==="km") return v.toFixed(1)+" km"; if(m==="hh_kids"||m==="young") return v.toFixed(0)+"%"; if(m.endsWith("_min")) return v+" min"; if(m==="tax") return v.toFixed(2)+"%"; return String(v); }
 function renderMap(){
   const m=$("mMetric").value; const names=Object.keys(MAP_GEO.areas); const vals=names.map(a=>areaMetric(a,m));
   const nums=vals.filter(v=>typeof v==="number"); const lo=Math.min(...nums), hi=Math.max(...nums);
@@ -1180,6 +1204,7 @@ function renderMapInfo(){ const box=$("mInfo"); if(!mSel){ box.innerHTML=`<h5>St
    <div class="stat"><span>Median income</span><span class="v">${fmt(x.inc/1000)}k kr</span><span></span></div>
    <div class="stat"><span>Households with children</span><span class="v">${x.hh_kids.toFixed(0)}%</span><span></span></div>
    <div class="stat"><span>School results (year 9)</span><span class="v">${sc.merit??"–"}</span><span class="note">region avg ${SCHOOLS._avg.merit} · ${sc.g9_schools||0} schools</span></div>
+   <div class="stat"><span>Municipal tax + burial fee</span><span class="v">${TAXES[a].total_excl_church.toFixed(2)}%</span><span class="note">${taxRank(a)}</span></div>
    <div class="stat"><span>Largest party 2026</span><span class="v">${x.votes?x.votes[0][0]+" "+x.votes[0][1]+"%":"–"}</span><span></span></div>
    <p style="margin-top:10px"><button class="b" id="mOpen">Open full profile</button></p>`;
   $("mOpen").onclick=()=>{ aSel=a; show("areas"); setTimeout(()=>$("aDetail").scrollIntoView({behavior:"smooth"}),80); }; }
@@ -1187,9 +1212,9 @@ function renderCommuteTable(){ const rows=Object.entries(COMMUTE).map(([a,c])=>(
   renderSortTable("mTable",rows,[["a","Area"],["from","Measured from"],["km","Distance",v=>v.toFixed(1)+" km","n"],["pt_min","🚆 Public transport",v=>v+" min","n"],["route","Fastest route"],["car_min","🚗 Car",v=>v+" min","n"],["car_km","Road km",v=>v.toFixed(1),"n"],["bike_min","🚲 Bike",v=>v+" min","n"]],"pt_min"); if(!sortState.mTable._init){ sortState.mTable.d=1; sortState.mTable._init=1; renderSortTable("mTable",rows,[["a","Area"],["from","Measured from"],["km","Distance",v=>v.toFixed(1)+" km","n"],["pt_min","🚆 Public transport",v=>v+" min","n"],["route","Fastest route"],["car_min","🚗 Car",v=>v+" min","n"],["car_km","Road km",v=>v.toFixed(1),"n"],["bike_min","🚲 Bike",v=>v+" min","n"]],"pt_min"); } }
 
 /* matcher */
-const PRI=[["commute","Short commute",2],["afford","Value for money (lower price)",2],["schools","Good schools",1],["family","Family-friendly area",1],["scene","Restaurants & nightlife",1],["quiet","Quiet, green, villa feel",1],["growth","Strong price growth",1],["safety","Fewer police-reported incidents",1]];
+const PRI=[["commute","Short commute",2],["afford","Value for money (lower price)",2],["schools","Good schools",1],["family","Family-friendly area",1],["scene","Restaurants & nightlife",1],["quiet","Quiet, green, villa feel",1],["growth","Strong price growth",1],["safety","Fewer police-reported incidents",1],["tax","Lower municipal tax",0]];
 const Q={house:"single",type:"any",mode:"pt_min",w:Object.fromEntries(PRI.map(p=>[p[0],p[2]]))};
-const PRESET={single:{scene:2,family:0,schools:0,quiet:0},couple:{scene:1,family:1,schools:0,quiet:1},family:{scene:0,family:3,schools:3,quiet:2},retired:{scene:1,family:0,schools:0,quiet:2,commute:1}};
+const PRESET={single:{scene:2,family:0,schools:0,quiet:0,tax:0},couple:{scene:1,family:1,schools:0,quiet:1,tax:0},family:{scene:0,family:3,schools:3,quiet:2,tax:1},retired:{scene:1,family:0,schools:0,quiet:2,commute:1,tax:1}};
 function buildPri(){ $("qPri").innerHTML=PRI.map(([k,l])=>`<div class="pri"><span>${l}</span><input type="range" min="0" max="3" step="1" value="${Q.w[k]}" data-k="${k}" title="0 = doesn't matter, 3 = very important"></div>`).join("")+`<p class="legend">Slider: not important → very important</p>`;
   $("qPri").querySelectorAll("input").forEach(i=>i.oninput=()=>{ Q.w[i.dataset.k]=+i.value; renderMatch(); }); }
 function chipGroup(id,key,after){ $(id).querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ Q[key]=c.dataset.v; $(id).querySelectorAll(".chip").forEach(x=>x.classList.toggle("on",x===c)); if(after) after(c.dataset.v); renderMatch(); }); }
@@ -1201,7 +1226,7 @@ function renderMatch(){
   const price=names.map(a=>{ const p=areaPriceInfo(a); return p?p.now:null; }), comm=names.map(a=>COMMUTE[a][Q.mode]);
   const crit={ commute:norm01(comm,true), afford:norm01(price,true), schools:norm01(names.map(a=>(SCHOOLS[a]||{}).merit),false), family:norm01(names.map(a=>AREA_STATS[a].hh_kids),false),
     scene:norm01(names.map(a=>(AREA_TEXT[a].lively||0)*10+AREA_STATS[a].young),false), quiet:norm01(names.map(a=>AREA_STATS[a].smahus-(AREA_TEXT[a].lively||0)*8),false),
-    growth:norm01(names.map(a=>{ const p=areaPriceInfo(a); return p?p.c48:null; }),false), safety:norm01(police,true) };
+    growth:norm01(names.map(a=>{ const p=areaPriceInfo(a); return p?p.c48:null; }),false), safety:norm01(police,true), tax:norm01(names.map(a=>TAXES[a].total_excl_church),true) };
   const W=Q.w; const wsum=Object.values(W).reduce((s,v)=>s+v,0)||1;
   const rows=names.map((a,i)=>{ let sc=0; for(const k in W) sc+=W[k]*crit[k][i]; sc=sc/wsum*100;
     const over=price[i]?price[i]/maxPps-1:0, slow=comm[i]-maxMin; const reasons=[], cons=[];
@@ -1214,6 +1239,7 @@ function renderMatch(){
     if(W.scene){ if((AREA_TEXT[a].lively||0)>=2) reasons.push(AREA_TEXT[a].lively>=3?"Lively bar & restaurant scene":"Good local café & restaurant scene"); else if(W.scene>=2) cons.push("Quiet — limited nightlife"); }
     if(W.quiet&&x.smahus>=40) reasons.push(`${x.smahus.toFixed(0)}% live in houses — green and calm`);
     if(W.growth){ const p=areaPriceInfo(a); if(p&&p.c48>0.12) reasons.push(`Prices ${pct(p.c48,0)} since 2022`); else if(p&&p.c48<0) cons.push(`Prices ${pct(p.c48,0)} since 2022`); }
+    if(W.tax){ const t=TAXES[a].total_excl_church; if(t<=30.2) reasons.push(`Low municipal tax (${t.toFixed(2)}%)`); else if(t>=31.5) cons.push(`Higher municipal tax (${t.toFixed(2)}%)`); }
     if(Q.type==="house"){ if(x.smahus<10){ cons.push("Very few houses — mostly apartments"); sc-=25; } else if(x.smahus>=40) reasons.push(`Plenty of houses (${x.smahus.toFixed(0)}% of residents)`); }
     if(Q.type==="flat"&&x.smahus>=60){ cons.push("Mostly houses — fewer apartments to choose from"); sc-=10; }
     return {a,score:Math.max(0,Math.min(100,sc)),reasons,cons,price:price[i],comm:comm[i],merit:scl.merit,kids:x.hh_kids,inc:x.inc}; }).sort((p,q)=>q.score-p.score);
@@ -1223,6 +1249,28 @@ function renderMatch(){
 let matchInit=false;
 function renderMatchTab(){ if(!matchInit){ matchInit=true; Object.assign(Q.w,PRESET[Q.house]); buildPri(); chipGroup("#qHouse".slice(1),"house",v=>{ Object.assign(Q.w,PRESET[v]); buildPri(); }); chipGroup("qType","type"); chipGroup("qMode","mode",v=>{ $("qMax").value=v==="bike_min"?45:v==="car_min"?25:35; });
   ["qBudget","qSqm","qMax"].forEach(id=>$(id).oninput=renderMatch); } renderMatch(); }
+
+
+/* ================= taxes ================= */
+const TAXES={"Östermalm":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Engelbrekt",0.79],["Hedvig Eleonora och Oscar",0.725]],"church_min":0.725,"church_max":0.79,"total25":30.6},"Vasastan-Norrmalm":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Adolf Fredrik",1.18],["Gustav Vasa",0.98],["S:t Johannes",0.99],["S:t Matteus",0.82],["Domkyrkoförsamlingen",1.03]],"church_min":0.82,"church_max":1.18,"total25":30.6},"Kungsholmen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Västermalm",0.7]],"church_min":0.7,"church_max":0.7,"total25":30.6},"Essingen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Västermalm",0.7]],"church_min":0.7,"church_max":0.7,"total25":30.6},"Södermalm":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Högalid",0.97],["Katarina",0.895],["Maria Magdalena",0.87],["Sofia",0.85]],"church_min":0.85,"church_max":0.97,"total25":30.6},"Bromma-Västerled":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Bromma",0.77],["Västerled",0.76]],"church_min":0.76,"church_max":0.77,"total25":30.6},"Hässelby-Vällingby":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Hässelby",0.9],["Vällingby",0.9]],"church_min":0.9,"church_max":0.9,"total25":30.6},"Spånga-Kista":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Spånga-Kista",0.93]],"church_min":0.93,"church_max":0.93,"total25":30.6},"Hägersten-Liljeholmen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Hägersten",0.765]],"church_min":0.765,"church_max":0.765,"total25":30.6},"Brännkyrka-Skärholmen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Brännkyrka",0.88],["Skärholmen",1.1]],"church_min":0.88,"church_max":1.1,"total25":30.6},"Enskede-Skarpnäck":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Enskede-Årsta",0.9],["Skarpnäck",0.985]],"church_min":0.9,"church_max":0.985,"total25":30.6},"Farsta-Vantör":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Farsta",0.87],["Vantör",0.8]],"church_min":0.8,"church_max":0.87,"total25":30.6},"Solna":{"municipality":"Solna","kommun":17.37,"region":12.33,"burial":0.292,"total_excl_church":29.992,"parishes":[["Solna",0.69]],"church_min":0.69,"church_max":0.69,"total25":29.75},"Sundbyberg":{"municipality":"Sundbyberg","kommun":19.25,"region":12.33,"burial":0.292,"total_excl_church":31.872,"parishes":[["Sundbyberg",0.725]],"church_min":0.725,"church_max":0.725,"total25":31.63},"Nacka":{"municipality":"Nacka","kommun":17.78,"region":12.33,"burial":0.292,"total_excl_church":30.402,"parishes":[["Nacka",0.8],["Boo",0.85],["Saltsjöbaden",0.93]],"church_min":0.8,"church_max":0.93,"total25":30.26},"Lidingö":{"municipality":"Lidingö","kommun":17.34,"region":12.33,"burial":0.292,"total_excl_church":29.962,"parishes":[["Lidingö",0.67]],"church_min":0.67,"church_max":0.67,"total25":29.72},"Danderyd":{"municipality":"Danderyd","kommun":18.25,"region":12.33,"burial":0.292,"total_excl_church":30.872,"parishes":[["Danderyd",0.73]],"church_min":0.73,"church_max":0.73,"total25":30.63},"Täby":{"municipality":"Täby","kommun":17.55,"region":12.33,"burial":0.292,"total_excl_church":30.172,"parishes":[["Täby",0.78]],"church_min":0.78,"church_max":0.78,"total25":29.93},"Sollentuna":{"municipality":"Sollentuna","kommun":18.12,"region":12.33,"burial":0.292,"total_excl_church":30.742,"parishes":[["Sollentuna",0.8]],"church_min":0.8,"church_max":0.8,"total25":30.5},"Järfälla":{"municipality":"Järfälla","kommun":19.19,"region":12.33,"burial":0.292,"total_excl_church":31.812,"parishes":[["Järfälla",0.69]],"church_min":0.69,"church_max":0.69,"total25":31.62},"Huddinge":{"municipality":"Huddinge","kommun":19.38,"region":12.33,"burial":0.292,"total_excl_church":32.002,"parishes":[["Huddinge-Segeltorp",0.8],["Flemingsberg-Vårby",0.8],["Trångsund-Skogås",0.8]],"church_min":0.8,"church_max":0.8,"total25":31.85},"Botkyrka":{"municipality":"Botkyrka","kommun":19.9,"region":12.33,"burial":0.292,"total_excl_church":32.522,"parishes":[["Botkyrka",0.94],["Grödinge",1.02]],"church_min":0.94,"church_max":1.02,"total25":32.43},"Haninge":{"municipality":"Haninge","kommun":18.95,"region":12.33,"burial":0.292,"total_excl_church":31.572,"parishes":[["Österhaninge",0.85],["Västerhaninge-Muskö",0.85],["Dalarö-Ornö-Utö",0.85]],"church_min":0.85,"church_max":0.85,"total25":31.83},"Tyresö":{"municipality":"Tyresö","kommun":19.5,"region":12.33,"burial":0.292,"total_excl_church":32.122,"parishes":[["Tyresö",0.82]],"church_min":0.82,"church_max":0.82,"total25":31.88},"Värmdö":{"municipality":"Värmdö","kommun":18.98,"region":12.33,"burial":0.292,"total_excl_church":31.602,"parishes":[["Gustavsberg-Ingarö",0.87],["Värmdö",0.87],["Djurö, Möja och Nämdö",1.27]],"church_min":0.87,"church_max":1.27,"total25":31.36}};
+function taxRank(a){ const v=TAXES[a].total_excl_church, n=Object.keys(TAXES).length, r=1+Object.keys(TAXES).filter(x=>TAXES[x].total_excl_church<v-1e-9).length; return r===1?"lowest of "+n:r===n?"highest of "+n:"rank "+r+" of "+n+" (1 = lowest)"; }
+function yearlyTax(a,annualTaxable){ return annualTaxable*TAXES[a].total_excl_church/100; }
+function renderTaxes(){
+  const sal=(+$("tSalary").value||0)*12; const taxable=Math.max(0,sal*0.97); const names=Object.keys(TAXES);
+  const lo=Math.min(...names.map(a=>TAXES[a].total_excl_church)), hi=Math.max(...names.map(a=>TAXES[a].total_excl_church));
+  if(!sortState.tTable) sortState.tTable={k:"total",d:1};
+  const rows=names.map(a=>{ const t=TAXES[a]; return {a,total:t.total_excl_church,kommun:t.kommun,burial:t.burial,church:t.church_min===t.church_max?t.church_min:null,churchTxt:t.church_min===t.church_max?t.church_min.toFixed(2)+"%":t.church_min.toFixed(2)+"–"+t.church_max.toFixed(2)+"%",chg:t.kommun+t.region-t.total25,yr:yearlyTax(a,taxable),vsLow:yearlyTax(a,taxable)-taxable*lo/100}; });
+  renderSortTable("tTable",rows,[["a","Area"],["total","Municipal + region + burial",v=>`<b>${v.toFixed(2)}%</b>`,"n"],["kommun","of which municipality",v=>v.toFixed(2)+"%","n"],["churchTxt","Church fee (members)"],["chg","Change vs 2025",v=>`<span class="${v>0?"neg":v<0?"pos":""}">${v>0?"+":""}${v.toFixed(2)}</span>`,"n"],["vsLow","Extra per year vs lowest",v=>v<1?"–":"+"+fmt(Math.round(v/100)*100)+" kr","n"]],"total");
+  const lowA=names.find(a=>TAXES[a].total_excl_church===lo), hiA=names.find(a=>TAXES[a].total_excl_church===hi);
+  $("tExample").innerHTML=`On a salary of <b>${fmt(sal/12)} kr/month</b> (≈${fmt(Math.round(taxable/1000)*1000)} kr taxable per year), municipal tax, region tax and burial fee come to about <b>${fmt(Math.round(yearlyTax(lowA,taxable)/100)*100)} kr</b> a year in ${esc(lowA)} and <b>${fmt(Math.round(yearlyTax(hiA,taxable)/100)*100)} kr</b> in ${esc(hiA)} — a difference of <b>${fmt(Math.round((yearlyTax(hiA,taxable)-yearlyTax(lowA,taxable))/100)*100)} kr a year</b> (≈${fmt(Math.round((yearlyTax(hiA,taxable)-yearlyTax(lowA,taxable))/12/10)*10)} kr a month). All of Stockholm city's 12 districts share one rate (${TAXES["Södermalm"].total_excl_church.toFixed(2)}%), helped by a much lower burial fee (0.07%, since the city runs its own cemeteries, vs 0.292% elsewhere). Every percentage point is worth about 1 000 kr per 100 000 kr of taxable income.`;
+}
+function taxProfileHtml(a){ const t=TAXES[a]; if(!t) return ""; const sal=(+$("tSalary").value||50000)*12*0.97; const names=Object.keys(TAXES); const lo=Math.min(...names.map(x=>TAXES[x].total_excl_church));
+  return `<h5>Taxes &amp; fees 2026</h5>
+   <div class="stat"><span>Municipal + region tax</span><span class="v">${(t.kommun+t.region).toFixed(2)}%</span><span class="note">${t.municipality==="Stockholm"?"Stockholm city rate":esc(t.municipality)+" municipality"}</span></div>
+   <div class="stat"><span>Burial fee (everyone)</span><span class="v">${t.burial.toFixed(3)}%</span><span></span></div>
+   <div class="stat"><span>Total, non-members</span><span class="v">${t.total_excl_church.toFixed(2)}%</span><span class="note">${taxRank(a)}</span></div>
+   <div class="stat"><span>Church fee (members)</span><span class="v">${t.church_min===t.church_max?t.church_min.toFixed(2)+"%":t.church_min.toFixed(2)+"–"+t.church_max.toFixed(2)+"%"}</span><span class="note">${t.parishes.map(q=>esc(q[0])+" "+q[1].toFixed(2)).join(", ")}</span></div>
+   <p class="legend" style="margin-top:4px">On ${fmt(Math.round(sal/1000)*1000)} kr taxable income: ≈${fmt(Math.round(sal*t.total_excl_church/10000)*100)} kr/year${t.total_excl_church>lo?`, ${fmt(Math.round(sal*(t.total_excl_church-lo)/10000)*100)} kr more than the lowest-tax area`:" — the lowest of the 25 areas"}. House buyers also pay 1.5% stamp duty; bostadsrätt buyers don't.</p>`; }
 
 /* ================= wiring ================= */
 let current="overview";
@@ -1234,7 +1282,7 @@ document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.
 document.querySelectorAll("[data-goto]").forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.goto);});
 window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(h&&h!==current&&$(h)&&$(h).tagName==="SECTION") show(h); });
 ["pMode","pFrom","pSmooth","pRate"].forEach(id=>$(id).onchange=renderPrices);
-$("aSort").onchange=renderAreas;
+$("aSort").onchange=renderAreas; $("tSalary").oninput=()=>{ renderTaxes(); renderAreaDetail(); };
 $("mMetric").onchange=renderMap; document.querySelectorAll("[data-z]").forEach(c=>c.onclick=()=>{ mZoom=c.dataset.z; document.querySelectorAll("[data-z]").forEach(x=>x.classList.toggle("on",x===c)); renderMap(); });
 $("pChips").onclick=e=>{ const c=e.target.closest(".chip"); if(!c) return; const a=c.dataset.a; pSel.has(a)?pSel.delete(a):pSel.add(a); renderPrices(); };
 $("pAll").onclick=()=>{ derive().areas.forEach(a=>pSel.add(a)); renderPrices(); }; $("pNone").onclick=()=>{ pSel.clear(); pSel.add("__none__"); renderPrices(); pSel.delete("__none__"); };

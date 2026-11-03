@@ -1,0 +1,490 @@
+{
+ "Östermalm": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Engelbrekt",
+    0.79
+   ],
+   [
+    "Hedvig Eleonora och Oscar",
+    0.725
+   ]
+  ],
+  "church_min": 0.725,
+  "church_max": 0.79,
+  "total25": 30.6
+ },
+ "Vasastan-Norrmalm": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Adolf Fredrik",
+    1.18
+   ],
+   [
+    "Gustav Vasa",
+    0.98
+   ],
+   [
+    "S:t Johannes",
+    0.99
+   ],
+   [
+    "S:t Matteus",
+    0.82
+   ],
+   [
+    "Domkyrkoförsamlingen",
+    1.03
+   ]
+  ],
+  "church_min": 0.82,
+  "church_max": 1.18,
+  "total25": 30.6
+ },
+ "Kungsholmen": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Västermalm",
+    0.7
+   ]
+  ],
+  "church_min": 0.7,
+  "church_max": 0.7,
+  "total25": 30.6
+ },
+ "Essingen": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Västermalm",
+    0.7
+   ]
+  ],
+  "church_min": 0.7,
+  "church_max": 0.7,
+  "total25": 30.6
+ },
+ "Södermalm": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Högalid",
+    0.97
+   ],
+   [
+    "Katarina",
+    0.895
+   ],
+   [
+    "Maria Magdalena",
+    0.87
+   ],
+   [
+    "Sofia",
+    0.85
+   ]
+  ],
+  "church_min": 0.85,
+  "church_max": 0.97,
+  "total25": 30.6
+ },
+ "Bromma-Västerled": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Bromma",
+    0.77
+   ],
+   [
+    "Västerled",
+    0.76
+   ]
+  ],
+  "church_min": 0.76,
+  "church_max": 0.77,
+  "total25": 30.6
+ },
+ "Hässelby-Vällingby": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Hässelby",
+    0.9
+   ],
+   [
+    "Vällingby",
+    0.9
+   ]
+  ],
+  "church_min": 0.9,
+  "church_max": 0.9,
+  "total25": 30.6
+ },
+ "Spånga-Kista": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Spånga-Kista",
+    0.93
+   ]
+  ],
+  "church_min": 0.93,
+  "church_max": 0.93,
+  "total25": 30.6
+ },
+ "Hägersten-Liljeholmen": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Hägersten",
+    0.765
+   ]
+  ],
+  "church_min": 0.765,
+  "church_max": 0.765,
+  "total25": 30.6
+ },
+ "Brännkyrka-Skärholmen": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Brännkyrka",
+    0.88
+   ],
+   [
+    "Skärholmen",
+    1.1
+   ]
+  ],
+  "church_min": 0.88,
+  "church_max": 1.1,
+  "total25": 30.6
+ },
+ "Enskede-Skarpnäck": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Enskede-Årsta",
+    0.9
+   ],
+   [
+    "Skarpnäck",
+    0.985
+   ]
+  ],
+  "church_min": 0.9,
+  "church_max": 0.985,
+  "total25": 30.6
+ },
+ "Farsta-Vantör": {
+  "municipality": "Stockholm",
+  "kommun": 18.22,
+  "region": 12.33,
+  "burial": 0.07,
+  "total_excl_church": 30.62,
+  "parishes": [
+   [
+    "Farsta",
+    0.87
+   ],
+   [
+    "Vantör",
+    0.8
+   ]
+  ],
+  "church_min": 0.8,
+  "church_max": 0.87,
+  "total25": 30.6
+ },
+ "Solna": {
+  "municipality": "Solna",
+  "kommun": 17.37,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 29.992,
+  "parishes": [
+   [
+    "Solna",
+    0.69
+   ]
+  ],
+  "church_min": 0.69,
+  "church_max": 0.69,
+  "total25": 29.75
+ },
+ "Sundbyberg": {
+  "municipality": "Sundbyberg",
+  "kommun": 19.25,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 31.872,
+  "parishes": [
+   [
+    "Sundbyberg",
+    0.725
+   ]
+  ],
+  "church_min": 0.725,
+  "church_max": 0.725,
+  "total25": 31.63
+ },
+ "Nacka": {
+  "municipality": "Nacka",
+  "kommun": 17.78,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 30.402,
+  "parishes": [
+   [
+    "Nacka",
+    0.8
+   ],
+   [
+    "Boo",
+    0.85
+   ],
+   [
+    "Saltsjöbaden",
+    0.93
+   ]
+  ],
+  "church_min": 0.8,
+  "church_max": 0.93,
+  "total25": 30.26
+ },
+ "Lidingö": {
+  "municipality": "Lidingö",
+  "kommun": 17.34,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 29.962,
+  "parishes": [
+   [
+    "Lidingö",
+    0.67
+   ]
+  ],
+  "church_min": 0.67,
+  "church_max": 0.67,
+  "total25": 29.72
+ },
+ "Danderyd": {
+  "municipality": "Danderyd",
+  "kommun": 18.25,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 30.872,
+  "parishes": [
+   [
+    "Danderyd",
+    0.73
+   ]
+  ],
+  "church_min": 0.73,
+  "church_max": 0.73,
+  "total25": 30.63
+ },
+ "Täby": {
+  "municipality": "Täby",
+  "kommun": 17.55,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 30.172,
+  "parishes": [
+   [
+    "Täby",
+    0.78
+   ]
+  ],
+  "church_min": 0.78,
+  "church_max": 0.78,
+  "total25": 29.93
+ },
+ "Sollentuna": {
+  "municipality": "Sollentuna",
+  "kommun": 18.12,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 30.742,
+  "parishes": [
+   [
+    "Sollentuna",
+    0.8
+   ]
+  ],
+  "church_min": 0.8,
+  "church_max": 0.8,
+  "total25": 30.5
+ },
+ "Järfälla": {
+  "municipality": "Järfälla",
+  "kommun": 19.19,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 31.812,
+  "parishes": [
+   [
+    "Järfälla",
+    0.69
+   ]
+  ],
+  "church_min": 0.69,
+  "church_max": 0.69,
+  "total25": 31.62
+ },
+ "Huddinge": {
+  "municipality": "Huddinge",
+  "kommun": 19.38,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 32.002,
+  "parishes": [
+   [
+    "Huddinge-Segeltorp",
+    0.8
+   ],
+   [
+    "Flemingsberg-Vårby",
+    0.8
+   ],
+   [
+    "Trångsund-Skogås",
+    0.8
+   ]
+  ],
+  "church_min": 0.8,
+  "church_max": 0.8,
+  "total25": 31.85
+ },
+ "Botkyrka": {
+  "municipality": "Botkyrka",
+  "kommun": 19.9,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 32.522,
+  "parishes": [
+   [
+    "Botkyrka",
+    0.94
+   ],
+   [
+    "Grödinge",
+    1.02
+   ]
+  ],
+  "church_min": 0.94,
+  "church_max": 1.02,
+  "total25": 32.43
+ },
+ "Haninge": {
+  "municipality": "Haninge",
+  "kommun": 18.95,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 31.572,
+  "parishes": [
+   [
+    "Österhaninge",
+    0.85
+   ],
+   [
+    "Västerhaninge-Muskö",
+    0.85
+   ],
+   [
+    "Dalarö-Ornö-Utö",
+    0.85
+   ]
+  ],
+  "church_min": 0.85,
+  "church_max": 0.85,
+  "total25": 31.83
+ },
+ "Tyresö": {
+  "municipality": "Tyresö",
+  "kommun": 19.5,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 32.122,
+  "parishes": [
+   [
+    "Tyresö",
+    0.82
+   ]
+  ],
+  "church_min": 0.82,
+  "church_max": 0.82,
+  "total25": 31.88
+ },
+ "Värmdö": {
+  "municipality": "Värmdö",
+  "kommun": 18.98,
+  "region": 12.33,
+  "burial": 0.292,
+  "total_excl_church": 31.602,
+  "parishes": [
+   [
+    "Gustavsberg-Ingarö",
+    0.87
+   ],
+   [
+    "Värmdö",
+    0.87
+   ],
+   [
+    "Djurö, Möja och Nämdö",
+    1.27
+   ]
+  ],
+  "church_min": 0.87,
+  "church_max": 1.27,
+  "total25": 31.36
+ }
+}
