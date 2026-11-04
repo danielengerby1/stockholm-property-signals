@@ -35,6 +35,12 @@ Not yet included: counts of restaurants, bars and playgrounds from OpenStreetMap
 - `taxes_2026.json` — per area: municipal and region income tax, burial fee, total excluding church fee, church fee by parish (Svenska kyrkan members only), and the 2025 municipal + region total for comparison. Source: Skatteverket's open dataset "Skattesatser per församling" (2026), cross-checked against SCB's municipal tax table. Stockholm city's 12 districts share one rate; the parishes give the church fee range.
 - National rules shown in the app (property fee caps, lagfart, pantbrev, capital gains, interest deduction) come from Skatteverket and Lantmäteriet and are the same in every area.
 
+## Monthly costs, house prices and BRF check
+
+- `villa_prices_scb.json` — SCB table TAB1169: number of sold houses (permanent living, excluding ground lease) and average purchase price per municipality, 2015 and 2020–2025. Stockholm city's 12 districts share the city figure.
+- Monthly cost model: loan = price × (1 − down payment, min 10%); amortisation 2% above 70% loan-to-value, 1% at 50–70% (Lag 2026:226, from 1 April 2026); interest deduction 30% up to 100 000 kr interest a year and 21% above; BRF fee default 830 kr/m²/year (Stockholm average); house running costs default 3 750 kr/month plus the capped property fee. Default rate 2.70% (median average 3-month rate, big banks, September 2026).
+- BRF health check thresholds (rules of thumb): debt < 5 000 kr/m² good, > 10 000 high; savings ≥ 150 kr/m² good, < 75 thin; fee 700–900 kr/m² normal; rate sensitivity < 5% good, > 10% high; energy < 100 kr/m² good, > 150 high.
+
 ## Refreshing the data
 Mäklarstatistik updates around the 8th of each month. Open their Stockholm page in a browser, paste `fetch_maklarstatistik.js` into the developer console and press Enter. The script downloads fresh CSV files, which you then drop into the app.
 
