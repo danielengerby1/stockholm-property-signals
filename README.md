@@ -28,3 +28,7 @@ The data is imported as files. The page doesn't fetch any websites itself.
 Open `index.html` in a browser. Chart.js and PapaParse load from a CDN. Saving data and scoring with Claude work only in the hosted version on claude.ai.
 
 The app loads real data by default: Svensk Mäklarstatistik prices for 25 Stockholm districts and municipalities, plus the Riksbank policy rate. See [`data/`](data/README.md) for sources and how to refresh them. Synthetic demo data is still available under Data & sources, with a deliberately built-in news effect for trying out the analysis.
+
+## Languages
+
+The app is available in English, Swedish, French and German (switcher top right; the choice is remembered, and `?lang=sv|fr|de` works in the URL). Translations live in `i18n/*.json`, keyed by the English text with numbers, area names and transit lines replaced by placeholders (`{n0}`, `{a0}`, `{r0}`). News headlines, police reports and place names are deliberately left untranslated.
