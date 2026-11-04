@@ -47,10 +47,10 @@ section{display:none}section.on{display:block}
 select,input[type=number],input[type=text],textarea{font:inherit;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid #cfcfcf;border-radius:var(--radius);padding:6px 8px;text-transform:none;letter-spacing:0;font-weight:500}
 select:focus,input:focus,textarea:focus{outline:2px solid var(--red);outline-offset:-1px;border-color:var(--red)}
 textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
-button.b{font:inherit;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;background:var(--red);color:#fff;border:0;border-radius:var(--radius);padding:9px 16px;cursor:pointer}
-button.b:hover{background:var(--red-dark)}
-button.b2{font:inherit;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fff;color:var(--black);border:1.5px solid var(--black);border-radius:var(--radius);padding:7px 13px;cursor:pointer}
-button.b2:hover{background:var(--black);color:#fff}
+button.b,a.b{font:inherit;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;background:var(--red);color:#fff;border:0;border-radius:var(--radius);padding:9px 16px;cursor:pointer}
+button.b:hover,a.b:hover{background:var(--red-dark)}
+button.b2,a.b2{font:inherit;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#fff;color:var(--black);border:1.5px solid var(--black);border-radius:var(--radius);padding:7px 13px;cursor:pointer}
+button.b2:hover,a.b2:hover{background:var(--black);color:#fff}
 button:disabled{opacity:.45;cursor:default}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .chip{border:1.5px solid #d6d6d6;background:#fff;border-radius:999px;padding:3px 11px;font-size:12.5px;font-weight:600;cursor:pointer;user-select:none}
@@ -76,11 +76,12 @@ a{color:var(--red);font-weight:600}
 td input[type=number]{width:64px;padding:2px 4px}
 .verdict{padding:12px 14px;background:var(--soft);border-left:4px solid var(--black);margin-top:12px}
 .verdict b{color:var(--red)}
-.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.acard{border:1px solid var(--line);border-top:3px solid var(--black);padding:12px 14px;cursor:pointer;background:#fff;transition:border-color .15s}
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.acard{border:1px solid var(--line);border-top:3px solid var(--black);padding:16px 18px;display:flex;flex-direction:column;gap:2px;cursor:pointer;background:#fff;transition:border-color .15s}
 .acard:hover{border-top-color:var(--red)}
 .acard.sel{border-color:var(--black);border-top-color:var(--red);box-shadow:0 0 0 1px var(--black) inset}
-.acard h4{margin:0 0 2px;font-size:15px;font-weight:800}
+.acard h4{margin:0 0 2px;font-size:18px;font-weight:800}
+.acard .about{font-size:13.5px;line-height:1.45;margin:8px 0 2px;color:var(--ink,#111)}
 .acard .pv{font-size:20px;font-weight:900;letter-spacing:-.02em}
 .acard .sm{font-size:12px;color:var(--muted)}
 .tag{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;margin:4px 4px 0 0;background:var(--soft);border:1px solid var(--line)}
@@ -118,6 +119,10 @@ input[type=range]{accent-color:#e62b1e}
 .score{font-weight:900;font-variant-numeric:tabular-nums}
 .srcT td{font-size:12.5px}
 .srcT td:first-child{font-weight:700}
+.sigpane{display:none}.sigpane.on{display:block}
+.lst{border-top:3px solid var(--black);padding-top:10px}.lst:first-child{border-top-color:var(--red)}
+.lst h4{margin:0;font-size:16px;font-weight:800}
+a.lnk{display:block;text-align:center;text-decoration:none;margin:6px 0;padding:8px 10px;font-size:13px}
 </style>
 </head>
 <body>
@@ -125,29 +130,18 @@ input[type=range]{accent-color:#e62b1e}
   <div class="brand"><span class="mark">Stockholm</span><h1>Property Signals</h1></div>
   <p class="slogan">Find your place in Stockholm.</p>
   <nav id="tabs">
-    <button data-t="overview" class="on">Overview</button>
+    <button data-t="match" class="on">Where should I live?</button>
     <button data-t="map">Map &amp; commute</button>
-    <button data-t="match">Where should I live?</button>
     <button data-t="areas">Neighbourhoods</button>
+    <button data-t="taxes">Taxes &amp; fees</button>
     <button data-t="prices">Prices</button>
-    <button data-t="news">News &amp; signals</button>
-    <button data-t="corr">Correlation</button>
-    <button data-t="fc">Forecast</button>
+    <button data-t="signals">Signals &amp; forecast</button>
     <button data-t="data">Data &amp; sources</button>
     <button data-t="about">About</button>
   </nav>
 </div></header>
 <main>
   <div id="demoBanner" class="banner"></div>
-
-  <!-- OVERVIEW -->
-  <section id="overview" class="on">
-    <div class="grid g4" id="kpis"></div>
-    <div class="grid g2" style="margin-top:14px">
-      <div class="card"><h3>12-month price change by neighbourhood</h3><p class="hint">Change in kr/kvm (3-month smoothed), latest month vs a year earlier.</p><div class="chartbox lg"><canvas id="cYoy"></canvas></div></div>
-      <div class="card"><h3>Does news lead prices?</h3><p class="hint">Pooled across all areas: correlation between net news sentiment and the following 3-month price change, at each lag. Bars outside the dashed band are unlikely to be chance.</p><div class="chartbox lg"><canvas id="cOvCorr"></canvas></div><div id="ovVerdict" class="verdict"></div></div>
-    </div>
-  </section>
 
   <!-- MAP -->
   <section id="map">
@@ -185,7 +179,7 @@ input[type=range]{accent-color:#e62b1e}
   </section>
 
   <!-- MATCHER -->
-  <section id="match">
+  <section id="match" class="on">
     <div class="card">
       <h3>Where should I live?</h3>
       <p class="hint">Tell us what matters and we'll rank the 25 areas. Everything is based on the official statistics, prices and travel times in this app.</p>
@@ -213,6 +207,10 @@ input[type=range]{accent-color:#e62b1e}
         </div>
       </div>
     </div>
+    <div class="card" style="margin-top:14px"><h3>Homes for sale in your top matches</h3>
+      <p class="hint">Opens live listings for each area on Hemnet, filtered to your home type, budget and size where the site supports it, plus recent sold prices and local estate agents.</p>
+      <div class="grid g3" id="qListings"></div>
+      <p class="note">Links open external sites. Hemnet listings belong to Hemnet and the agents; this app does not copy them. If a filter isn't applied, adjust it on Hemnet.</p></div>
     <div class="card" style="margin-top:14px"><h3>All areas ranked</h3><div class="scroll"><table id="qTable"></table></div>
       <p class="note">Match score: each priority is scored 0–100 across the 25 areas and weighted by how much it matters to you. Areas over budget or over your max commute are pushed down, not hidden. Prices are average bostadsrätt kr/kvm (villa prices are usually lower per m² outside the inner city). School results are averages for schools located in the area; Swedish school choice means children can attend schools elsewhere.</p></div>
   </section>
@@ -228,7 +226,12 @@ input[type=range]{accent-color:#e62b1e}
       <div class="agrid" id="aGrid"></div>
     </div>
     <div class="card" id="aDetail" style="margin-top:14px;display:none"></div>
-    <div class="card" style="margin-top:14px">
+    <p class="note" id="aSources">Sources: <b>population, households, housing, tenure, building age and education</b> from SCB (Statistics Sweden), 2025, summed from RegSO small areas for Stockholm's districts and municipality totals for the others. <b>Income</b>: SCB, median disposable income for ages 20–64, 2023 (population-weighted across small areas). <b>Elections</b>: Valmyndigheten, final results of the Riksdag election 13 Sep 2026, with change from 2022; for Stockholm's districts, polling districts are grouped by parish, the same parishes Mäklarstatistik's districts are built from. <b>Prices</b>: Svensk Mäklarstatistik, bostadsrätter. The written overviews are summaries by Claude based on these figures and general knowledge about the areas; they are not official descriptions.</p>
+  </section>
+
+  <!-- TAXES -->
+  <section id="taxes">
+    <div class="card">
       <div class="ctl" style="justify-content:space-between"><div><h3>Taxes &amp; fees by area (2026)</h3><p class="hint" style="margin:0">Income tax to the municipality and region, plus the burial fee, is set by where you are registered (folkbokförd) on 1 November the year before. Church fee applies only to members of the Church of Sweden and varies by parish.</p></div>
         <label>Your monthly salary <input type="number" id="tSalary" value="50000" step="5000" style="width:100px"> kr</label></div>
       <div class="grid g2" style="align-items:start">
@@ -249,11 +252,12 @@ input[type=range]{accent-color:#e62b1e}
         </div>
       </div>
     </div>
-    <p class="note" id="aSources">Sources: <b>population, households, housing, tenure, building age and education</b> from SCB (Statistics Sweden), 2025, summed from RegSO small areas for Stockholm's districts and municipality totals for the others. <b>Income</b>: SCB, median disposable income for ages 20–64, 2023 (population-weighted across small areas). <b>Elections</b>: Valmyndigheten, final results of the Riksdag election 13 Sep 2026, with change from 2022; for Stockholm's districts, polling districts are grouped by parish, the same parishes Mäklarstatistik's districts are built from. <b>Prices</b>: Svensk Mäklarstatistik, bostadsrätter. The written overviews are summaries by Claude based on these figures and general knowledge about the areas; they are not official descriptions.</p>
   </section>
 
   <!-- PRICES -->
   <section id="prices">
+    <div class="grid g4" id="kpis"></div>
+    <div class="card" style="margin:14px 0"><h3>12-month price change by neighbourhood</h3><p class="hint">Change in kr/kvm (3-month smoothed), latest month vs a year earlier.</p><div class="chartbox lg"><canvas id="cYoy"></canvas></div></div>
     <div class="card">
       <div class="ctl">
         <label>Show <select id="pMode"><option value="ppsqm">kr/kvm</option><option value="index">Index (start = 100)</option><option value="yoy">12-month change %</option><option value="annual">Annual kr/kvm, long history</option></select></label>
@@ -268,8 +272,14 @@ input[type=range]{accent-color:#e62b1e}
     <div class="card" style="margin-top:14px"><h3>Neighbourhood table</h3><p class="hint">Click a column to sort. Changes use 3-month smoothed kr/kvm.</p><div class="scroll"><table id="pTable"></table></div></div>
   </section>
 
-  <!-- NEWS -->
-  <section id="news">
+  <!-- SIGNALS & FORECAST -->
+  <section id="signals">
+    <div class="card" style="margin-bottom:14px">
+      <div class="ctl" style="justify-content:space-between;margin:0"><div><h3>Signals &amp; forecast</h3><p class="hint" style="margin:0">News, police and planning items for each area, how they relate to prices, and a price forecast.</p></div>
+      <span class="chips" id="sigTabs" style="margin:0"><span class="chip on" data-s="news">News &amp; items</span><span class="chip" data-s="corr">Correlation</span><span class="chip" data-s="fc">Forecast</span></span></div>
+      <div class="verdict" style="margin-top:10px"><b>What we found:</b> news coverage does <b>not</b> lead prices. Once seasonal patterns and city-wide swings are removed, an area's news in one month says nothing useful about its prices in the months after. Areas with better coverage <i>overall</i> have grown faster, but that reflects what the areas are like (income, schools, location) rather than timing. Interest rates and price momentum explain far more.</div>
+    </div>
+  <div class="sigpane on" id="news">
     <div class="card">
       <div class="ctl">
         <label>Area <select id="nArea"></select></label>
@@ -282,10 +292,8 @@ input[type=range]{accent-color:#e62b1e}
       <div class="chartbox"><canvas id="cNews"></canvas></div>
     </div>
     <div class="card" style="margin-top:14px"><h3>Items</h3><p class="hint">Sentiment runs from −1 (very negative for the area) to +1 (very positive). Edit a score to correct it; your edits are kept when re-scoring with the word list.</p><div class="scroll"><table id="nTable"></table></div><div class="note" id="nCount"></div></div>
-  </section>
-
-  <!-- CORRELATION -->
-  <section id="corr">
+  </div>
+  <div class="sigpane" id="corr">
     <div class="card">
       <div class="ctl">
         <label>Signal <select id="kSig">
@@ -316,10 +324,8 @@ input[type=range]{accent-color:#e62b1e}
       <div class="grid g2"><div class="chartbox"><canvas id="cCross"></canvas></div><div id="xVerdict" class="verdict" style="align-self:start"></div></div>
     </div>
     <div class="card" style="margin-top:14px"><h3>By neighbourhood</h3><p class="hint">Correlation per area at selected lags. Few news items per area make single-area values noisy — trust the pooled row more.</p><div class="scroll"><table class="heat" id="kHeat"></table></div></div>
-  </section>
-
-  <!-- FORECAST -->
-  <section id="fc">
+  </div>
+  <div class="sigpane" id="fc">
     <div class="card">
       <div class="ctl">
         <label>Area <select id="fArea"></select></label>
@@ -340,6 +346,7 @@ input[type=range]{accent-color:#e62b1e}
       <div class="scroll"><table id="fTable"></table></div>
     </div>
     <p class="note">This is a statistical model, not financial advice. It extrapolates relationships seen in past data; it cannot foresee shocks such as rule changes or a sudden rate move, and wide ranges are honest about that.</p>
+  </div>
   </section>
 
   <!-- ABOUT -->
@@ -351,12 +358,14 @@ input[type=range]{accent-color:#e62b1e}
         <div class="dsec">
           <h5>Why this exists</h5>
           <p>Choosing where to live in Stockholm usually means piecing things together from estate agents' listings, price sites, school rankings, the SL app and word of mouth. Stockholm Property Signals brings it all into one place: what homes cost and how prices are moving, how long the commute is, how good the schools are, who lives in each area and what is happening there. You can compare all 25 areas on equal terms before you book a single viewing.</p>
-          <p>It is also a research tool. It asks whether local news (good or bad), police incidents and planning decisions show up in house prices, and whether that helps forecast where prices go next. So far the honest answer is that news <i>reflects</i> an area more than it <i>predicts</i> price moves — see the Correlation and Forecast tabs.</p>
+          <p>It is also a research tool. It asks whether local news (good or bad), police incidents and planning decisions show up in house prices, and whether that helps forecast where prices go next. So far the honest answer is that news <i>reflects</i> an area more than it <i>predicts</i> price moves — see Signals &amp; forecast.</p>
           <h5>What's inside</h5>
-          <p><b>Map &amp; commute</b> — all areas on one map, with travel times to T-Centralen by public transport, car and bike.<br>
-          <b>Where should I live?</b> — tell it your budget, household and priorities and get a ranked shortlist with reasons.<br>
+          <p><b>Where should I live?</b> — tell it your budget, household and priorities and get a ranked shortlist with reasons, plus links to homes for sale in your top matches.<br>
+          <b>Map &amp; commute</b> — all areas on one map, with travel times to T-Centralen by public transport, car and bike.<br>
           <b>Neighbourhoods</b> — a profile of each area: character, who it suits, housing, people, schools, politics and news.<br>
-          <b>Prices, News, Correlation, Forecast</b> — the market data and the analysis behind it.</p>
+          <b>Taxes &amp; fees</b> — 2026 municipal tax, burial and church fees for every area, and the property rules that apply everywhere.<br>
+          <b>Prices</b> — the market today and price history by area.<br>
+          <b>Signals &amp; forecast</b> — news, police and planning items, how they relate to prices, and a price forecast.</p>
           <h5>How the areas are defined</h5>
           <p>Stockholm city is split into the 12 districts used by Svensk Mäklarstatistik, which follow the city's old parish boundaries (for example, Gamla stan belongs to Vasastan-Norrmalm and Blackeberg to Bromma-Västerled). The 13 surrounding municipalities are shown as whole municipalities. Statistics for Stockholm's districts are built up from SCB's 127 small areas (RegSO), and election results from the city's polling districts.</p>
           <h5>Good to know</h5>
@@ -702,19 +711,15 @@ function renderOverview(){
   const D=derive(); banner();
   const last=D.T-1; const yoy={}; for(const a of D.areas){ const sm=D.P[a].sm; if(sm[last]!=null&&sm[last-12]!=null) yoy[a]=sm[last]/sm[last-12]-1; }
   const cityY=mean(Object.values(yoy)); const nNews=S.news.filter(n=>n.cat!=="police").length, nPol=S.news.filter(n=>n.cat==="police").length;
-  const best=pooledBest(D,"sent",3,3);
   $("kpis").innerHTML=[
     [D.areas.length,"neighbourhoods with prices",D.T? `${D.months[0]} → ${D.months[last]}`:"no price data yet"],
     [pct(cityY),"average 12-month change", D.T?`latest month ${D.months[last]}`:""],
     [fmt(nNews),"news & planning items",`${fmt(nPol)} police incidents`],
-    [best? (best.r>0?"+":"")+best.r.toFixed(2):"–","strongest news→price correlation",best?`at ${best.lag}-month lag, pooled`:"needs news + prices"]
+    (()=>{ const top=Object.entries(yoy).sort((x,y)=>y[1]-x[1])[0]; return top?[pct(top[1]),"fastest riser, 12 months",esc(top[0])]:["–","fastest riser",""]; })()
   ].map(([v,l,s])=>`<div class="card kpi"><div class="v">${v}</div><div class="l">${l}</div><div class="note">${s}</div></div>`).join("");
   const arr=Object.entries(yoy).sort((x,y)=>y[1]-x[1]);
   mkChart("cYoy",{type:"bar",data:{labels:arr.map(x=>x[0]),datasets:[{data:arr.map(x=>x[1]*100),backgroundColor:arr.map(x=>x[1]>=0?css("--pos"):css("--neg"))}]},
     options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>pct(c.raw/100)}}},scales:{x:{ticks:{callback:v=>v+"%"}},y:{ticks:{autoSkip:false,font:{size:11}}}}}});
-  const cc=crossCorr(D,"__all","sent",3,3);
-  drawCorrBars("cOvCorr",cc);
-  $("ovVerdict").innerHTML=verdictText(cc,"Net news sentiment");
 }
 function pooledBest(D,key,w,H){ const cc=crossCorr(D,"__all",key,w,H); if(!cc) return null; let b=null; for(const x of cc.rows) if(x.lag>0&&x.r!=null&&(!b||Math.abs(x.r)>Math.abs(b.r))) b=x; return b; }
 
@@ -1094,13 +1099,13 @@ function renderAreas(){
   let list=names.filter(a=>!aTag||areaTags(a).some(t=>t[0]===aTag));
   list.sort((x,y)=>{ const a=val(x),b=val(y); if(key==="name") return a.localeCompare(b,"sv"); if(a==null) return 1; if(b==null) return -1; return b-a; });
   $("aGrid").innerHTML=list.map(a=>{ const x=AREA_STATS[a], p=areaPriceInfo(a); const top=x.votes&&x.votes[0];
-    return `<div class="acard ${aSel===a?"sel":""}" data-a="${esc(a)}"><h4>${esc(a)}</h4><div class="sm">${esc((AREA_TEXT[a].includes||"").split(",").slice(0,3).join(", "))}…</div>
+    return `<div class="acard ${aSel===a?"sel":""}" data-a="${esc(a)}"><h4>${esc(a)}</h4><div class="sm">${esc((AREA_TEXT[a].includes||"").split(",").slice(0,4).join(", "))}…</div><p class="about">${esc(AREA_BLURB[a]||"")}</p>
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px"><span class="pv">${p?fmt(p.now/1000,0)+"k":"–"}<span class="sm" style="font-weight:600"> kr/kvm</span></span><span class="${p&&p.c48<0?"neg":"pos"}" style="font-size:13px">${p?pct(p.c48,0):""} <span class="sm">since ’22</span></span></div>
       <div class="sm" style="margin-top:4px">${fmt(x.pop)} residents · income ${fmt(x.inc/1000)}k · tax ${TAXES[a].total_excl_church.toFixed(2)}% · ${top?"largest: <b>"+top[0]+"</b> "+top[1]+"%":""}</div>
       <div>${areaTags(a).slice(0,4).map(t=>`<span class="tag ${t[2]?"r":""}">${esc(t[0])}</span>`).join("")}</div></div>`; }).join("") || `<p class="note">No areas match.</p>`;
   $("aGrid").querySelectorAll(".acard").forEach(c=>c.onclick=()=>{ aSel=c.dataset.a; renderAreas(); setTimeout(()=>$("aDetail").scrollIntoView({behavior:"smooth",block:"start"}),50); });
   $("aTags").querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ aTag=c.dataset.tag||null; renderAreas(); });
-  renderAreaDetail(); renderTaxes(); }
+  renderAreaDetail(); }
 function statRow(label,v,city,fmtf,max){ const w=Math.max(0,Math.min(100,v/max*100)), cw=Math.max(0,Math.min(100,city/max*100));
   return `<div class="stat"><span>${label}</span><span class="v">${fmtf(v)}</span><div class="bar" title="City average: ${fmtf(city)}"><i style="width:${w}%"></i><b style="left:${cw}%"></b></div></div>`; }
 function stackBar(parts){ const tot=parts.reduce((s,p)=>s+p[1],0)||1;
@@ -1244,13 +1249,26 @@ function renderMatch(){
     if(Q.type==="flat"&&x.smahus>=60){ cons.push("Mostly houses — fewer apartments to choose from"); sc-=10; }
     return {a,score:Math.max(0,Math.min(100,sc)),reasons,cons,price:price[i],comm:comm[i],merit:scl.merit,kids:x.hh_kids,inc:x.inc}; }).sort((p,q)=>q.score-p.score);
   $("qResults").innerHTML=rows.slice(0,5).map((r,i)=>`<div class="mres" data-a="${esc(r.a)}"><h4><span>${i+1}. ${esc(r.a)}</span><span class="score">${r.score.toFixed(0)}%</span></h4><ul>${r.reasons.slice(0,4).map(t=>`<li>${esc(t)}</li>`).join("")}${r.cons.slice(0,2).map(t=>`<li class="no">${esc(t)}</li>`).join("")}</ul></div>`).join("");
+  renderListings(rows);
   $("qResults").querySelectorAll(".mres").forEach(d=>d.onclick=()=>{ aSel=d.dataset.a; show("areas"); setTimeout(()=>$("aDetail").scrollIntoView({behavior:"smooth"}),80); });
   renderSortTable("qTable",rows.map((r,i)=>({...r,rank:i+1})),[["rank","#",v=>v,"n"],["a","Area"],["score","Match",v=>`<b>${v.toFixed(0)}%</b>`,"n"],["price","kr/kvm",v=>fmt(v),"n"],["comm","Commute (min)",v=>v,"n"],["merit","Schools",v=>v??"–","n"],["kids","Families",v=>v.toFixed(0)+"%","n"],["inc","Income",v=>fmt(v/1000)+"k","n"]],"score"); }
+
+const HEMNET_SLUG={"Östermalm": "stockholms-kommun/ostermalm-djurgarden", "Vasastan-Norrmalm": "stockholms-kommun/vasastan", "Kungsholmen": "stockholms-kommun/kungsholmen", "Essingen": "stockholms-kommun/kungsholmen-essingeoarna", "Södermalm": "stockholms-kommun/sodermalm", "Bromma-Västerled": "stockholms-kommun/bromma", "Hässelby-Vällingby": "stockholms-kommun/hasselby-vallingby", "Spånga-Kista": "stockholms-kommun/spanga-tensta", "Hägersten-Liljeholmen": "stockholms-kommun/hagersten-liljeholmen", "Brännkyrka-Skärholmen": "stockholms-kommun/skarholmen", "Enskede-Skarpnäck": "stockholms-kommun/enskede-skarpnack", "Farsta-Vantör": "stockholms-kommun/farsta", "Solna": "solna-kommun", "Sundbyberg": "sundbybergs-kommun", "Nacka": "nacka-kommun", "Lidingö": "lidingo-kommun", "Danderyd": "danderyds-kommun", "Täby": "taby-kommun", "Sollentuna": "sollentuna-kommun", "Järfälla": "jarfalla-kommun", "Huddinge": "huddinge-kommun", "Botkyrka": "botkyrka-kommun", "Haninge": "haninge-kommun", "Tyresö": "tyreso-kommun", "Värmdö": "varmdo-kommun"}; const AGENT_Q={"Vasastan-Norrmalm": "Vasastan", "Bromma-Västerled": "Bromma", "Hässelby-Vällingby": "Vällingby", "Spånga-Kista": "Kista", "Hägersten-Liljeholmen": "Liljeholmen", "Brännkyrka-Skärholmen": "Älvsjö", "Enskede-Skarpnäck": "Enskede", "Farsta-Vantör": "Farsta"};
+function hemnetUrl(a,kind){ const t={flat:"lagenhet/",house:"hus/",any:""}[Q.type]||""; const base=`https://www.hemnet.se/${kind}/${t}${HEMNET_SLUG[a]}`;
+  if(kind!=="till-salu") return base; const q=new URLSearchParams(); const b=+$("qBudget").value, m=+$("qSqm").value; if(b) q.set("price_max",b); if(m) q.set("living_area_min",m); return base+"?"+q; }
+function agentUrl(a){ return "https://www.google.com/maps/search/"+encodeURIComponent("fastighetsmäklare "+(AGENT_Q[a]||a)+" Stockholm"); }
+function renderListings(rows){ const b=+$("qBudget").value||0, m=+$("qSqm").value||0, type={flat:"apartments",house:"houses",any:"homes"}[Q.type];
+  $("qListings").innerHTML=rows.slice(0,3).map((r,i)=>`<div class="dsec lst"><h4>${i+1}. ${esc(r.a)}</h4><p class="note" style="margin:2px 0 8px">${esc(type)} up to ${fmt(b)} kr${m?`, from ${m} m²`:""}${r.price?` · typical ${fmt(Math.round(r.price*m/1e4)*1e4)} kr for ${m} m²`:""}</p>
+    <a class="b lnk" href="${hemnetUrl(r.a,"till-salu")}" target="_blank" rel="noopener">For sale on Hemnet ↗</a>
+    <a class="b2 lnk" href="${hemnetUrl(r.a,"kommande")}" target="_blank" rel="noopener">Coming soon ↗</a>
+    <a class="b2 lnk" href="${hemnetUrl(r.a,"salda")}" target="_blank" rel="noopener">Sold prices ↗</a>
+    <a class="b2 lnk" href="${agentUrl(r.a)}" target="_blank" rel="noopener">Local estate agents ↗</a></div>`).join(""); }
 let matchInit=false;
 function renderMatchTab(){ if(!matchInit){ matchInit=true; Object.assign(Q.w,PRESET[Q.house]); buildPri(); chipGroup("#qHouse".slice(1),"house",v=>{ Object.assign(Q.w,PRESET[v]); buildPri(); }); chipGroup("qType","type"); chipGroup("qMode","mode",v=>{ $("qMax").value=v==="bike_min"?45:v==="car_min"?25:35; });
   ["qBudget","qSqm","qMax"].forEach(id=>$(id).oninput=renderMatch); } renderMatch(); }
 
 
+const AREA_BLURB={"Östermalm": "Grand 1800s stone buildings, Stureplan, Östermalms saluhall and Djurgården on the doorstep — Stockholm's most prestigious address, with prices to match.", "Vasastan-Norrmalm": "Classic turn-of-the-century apartments, buzzing cafés around Odenplan and Sankt Eriksplan, and the city centre within walking distance.", "Kungsholmen": "Central yet calm island district with waterfront walks on Norr Mälarstrand, a strong local restaurant scene and many young professionals.", "Essingen": "Two small, leafy islands in Lake Mälaren — quiet, green and close to the water, with mostly 1930s–50s apartments and a village feel.", "Södermalm": "Stockholm's creative heart: SoFo boutiques, bars, vintage shops and views from the cliffs, plus modern Hammarby sjöstad by the water.", "Bromma-Västerled": "Garden-city villas, Bromma airport and plenty of green space. A favourite for families who want a house within easy reach of the city.", "Hässelby-Vällingby": "Planned 1950s suburbs with Vällingby centrum at the core, plus lakeside villas and nature along Mälaren. Good value for space.", "Spånga-Kista": "Kista's tech cluster and shopping centre next to Spånga's villa streets and the Järva suburbs. Among the lowest prices in the city.", "Hägersten-Liljeholmen": "Fast-growing south-west district: new waterfront blocks at Liljeholmskajen, cosy Aspudden and Midsommarkransen, short metro ride to town.", "Brännkyrka-Skärholmen": "Southern suburbs from Älvsjö's villas and commuter trains to Skärholmen's big shopping centre. Affordable with good transport links.", "Enskede-Skarpnäck": "Gamla Enskede's garden-city cottages, Årsta and the green Nacka reserve nearby — popular with families wanting space south of Södermalm.", "Farsta-Vantör": "Calm southern suburbs with lakes, forests and Farsta centrum. Mostly affordable 1950s–60s apartments plus townhouse pockets.", "Solna": "Next door to the city with Mall of Scandinavia, Friends Arena, Karolinska and fast-growing Arenastaden. Lower tax than Stockholm city.", "Sundbyberg": "Sweden's smallest and most densely built municipality — lively, young, lots of new builds, and only a few minutes from T-Centralen.", "Nacka": "Archipelago nature meets city: Nacka strand, Sickla's shops and the coming metro extension. Many families and a mix of villas and flats.", "Lidingö": "Island municipality with villas, sea views, forests and the lowest income tax in the region. Calm and family-friendly, close to Östermalm.", "Danderyd": "Sweden's highest-income municipality: large villas in Djursholm and Stocksund, strong schools and a quick commute into the city.", "Täby": "Well-off northern suburb built around Täby centrum and Roslagsbanan, with villas, townhouses and good schools.", "Sollentuna": "Family suburb north of the city with commuter trains, lakes and villa areas; well-regarded schools and steady growth.", "Järfälla": "North-western suburbs around Jakobsberg and Barkarby, where a new metro line and big new neighbourhoods are being built.", "Huddinge": "Large southern municipality with Flemingsberg's hospital and university, nature reserves and a mix of villas and apartments.", "Botkyrka": "South-western suburbs from Tumba to Alby — lower prices, plenty of nature, commuter trains, and the region's highest income tax.", "Haninge": "Coastal municipality south-east of the city with Handen's centre, archipelago access and affordable houses.", "Tyresö": "Leafy villa suburb with lakes, Tyresta national park and archipelago nature close by. Popular with families.", "Värmdö": "Archipelago living: summer houses turned permanent homes, sea views and nature, with Gustavsberg as the main centre."};
 /* ================= taxes ================= */
 const TAXES={"Östermalm":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Engelbrekt",0.79],["Hedvig Eleonora och Oscar",0.725]],"church_min":0.725,"church_max":0.79,"total25":30.6},"Vasastan-Norrmalm":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Adolf Fredrik",1.18],["Gustav Vasa",0.98],["S:t Johannes",0.99],["S:t Matteus",0.82],["Domkyrkoförsamlingen",1.03]],"church_min":0.82,"church_max":1.18,"total25":30.6},"Kungsholmen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Västermalm",0.7]],"church_min":0.7,"church_max":0.7,"total25":30.6},"Essingen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Västermalm",0.7]],"church_min":0.7,"church_max":0.7,"total25":30.6},"Södermalm":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Högalid",0.97],["Katarina",0.895],["Maria Magdalena",0.87],["Sofia",0.85]],"church_min":0.85,"church_max":0.97,"total25":30.6},"Bromma-Västerled":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Bromma",0.77],["Västerled",0.76]],"church_min":0.76,"church_max":0.77,"total25":30.6},"Hässelby-Vällingby":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Hässelby",0.9],["Vällingby",0.9]],"church_min":0.9,"church_max":0.9,"total25":30.6},"Spånga-Kista":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Spånga-Kista",0.93]],"church_min":0.93,"church_max":0.93,"total25":30.6},"Hägersten-Liljeholmen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Hägersten",0.765]],"church_min":0.765,"church_max":0.765,"total25":30.6},"Brännkyrka-Skärholmen":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Brännkyrka",0.88],["Skärholmen",1.1]],"church_min":0.88,"church_max":1.1,"total25":30.6},"Enskede-Skarpnäck":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Enskede-Årsta",0.9],["Skarpnäck",0.985]],"church_min":0.9,"church_max":0.985,"total25":30.6},"Farsta-Vantör":{"municipality":"Stockholm","kommun":18.22,"region":12.33,"burial":0.07,"total_excl_church":30.62,"parishes":[["Farsta",0.87],["Vantör",0.8]],"church_min":0.8,"church_max":0.87,"total25":30.6},"Solna":{"municipality":"Solna","kommun":17.37,"region":12.33,"burial":0.292,"total_excl_church":29.992,"parishes":[["Solna",0.69]],"church_min":0.69,"church_max":0.69,"total25":29.75},"Sundbyberg":{"municipality":"Sundbyberg","kommun":19.25,"region":12.33,"burial":0.292,"total_excl_church":31.872,"parishes":[["Sundbyberg",0.725]],"church_min":0.725,"church_max":0.725,"total25":31.63},"Nacka":{"municipality":"Nacka","kommun":17.78,"region":12.33,"burial":0.292,"total_excl_church":30.402,"parishes":[["Nacka",0.8],["Boo",0.85],["Saltsjöbaden",0.93]],"church_min":0.8,"church_max":0.93,"total25":30.26},"Lidingö":{"municipality":"Lidingö","kommun":17.34,"region":12.33,"burial":0.292,"total_excl_church":29.962,"parishes":[["Lidingö",0.67]],"church_min":0.67,"church_max":0.67,"total25":29.72},"Danderyd":{"municipality":"Danderyd","kommun":18.25,"region":12.33,"burial":0.292,"total_excl_church":30.872,"parishes":[["Danderyd",0.73]],"church_min":0.73,"church_max":0.73,"total25":30.63},"Täby":{"municipality":"Täby","kommun":17.55,"region":12.33,"burial":0.292,"total_excl_church":30.172,"parishes":[["Täby",0.78]],"church_min":0.78,"church_max":0.78,"total25":29.93},"Sollentuna":{"municipality":"Sollentuna","kommun":18.12,"region":12.33,"burial":0.292,"total_excl_church":30.742,"parishes":[["Sollentuna",0.8]],"church_min":0.8,"church_max":0.8,"total25":30.5},"Järfälla":{"municipality":"Järfälla","kommun":19.19,"region":12.33,"burial":0.292,"total_excl_church":31.812,"parishes":[["Järfälla",0.69]],"church_min":0.69,"church_max":0.69,"total25":31.62},"Huddinge":{"municipality":"Huddinge","kommun":19.38,"region":12.33,"burial":0.292,"total_excl_church":32.002,"parishes":[["Huddinge-Segeltorp",0.8],["Flemingsberg-Vårby",0.8],["Trångsund-Skogås",0.8]],"church_min":0.8,"church_max":0.8,"total25":31.85},"Botkyrka":{"municipality":"Botkyrka","kommun":19.9,"region":12.33,"burial":0.292,"total_excl_church":32.522,"parishes":[["Botkyrka",0.94],["Grödinge",1.02]],"church_min":0.94,"church_max":1.02,"total25":32.43},"Haninge":{"municipality":"Haninge","kommun":18.95,"region":12.33,"burial":0.292,"total_excl_church":31.572,"parishes":[["Österhaninge",0.85],["Västerhaninge-Muskö",0.85],["Dalarö-Ornö-Utö",0.85]],"church_min":0.85,"church_max":0.85,"total25":31.83},"Tyresö":{"municipality":"Tyresö","kommun":19.5,"region":12.33,"burial":0.292,"total_excl_church":32.122,"parishes":[["Tyresö",0.82]],"church_min":0.82,"church_max":0.82,"total25":31.88},"Värmdö":{"municipality":"Värmdö","kommun":18.98,"region":12.33,"burial":0.292,"total_excl_church":31.602,"parishes":[["Gustavsberg-Ingarö",0.87],["Värmdö",0.87],["Djurö, Möja och Nämdö",1.27]],"church_min":0.87,"church_max":1.27,"total25":31.36}};
 function taxRank(a){ const v=TAXES[a].total_excl_church, n=Object.keys(TAXES).length, r=1+Object.keys(TAXES).filter(x=>TAXES[x].total_excl_church<v-1e-9).length; return r===1?"lowest of "+n:r===n?"highest of "+n:"rank "+r+" of "+n+" (1 = lowest)"; }
@@ -1273,14 +1291,18 @@ function taxProfileHtml(a){ const t=TAXES[a]; if(!t) return ""; const sal=(+$("t
    <p class="legend" style="margin-top:4px">On ${fmt(Math.round(sal/1000)*1000)} kr taxable income: ≈${fmt(Math.round(sal*t.total_excl_church/10000)*100)} kr/year${t.total_excl_church>lo?`, ${fmt(Math.round(sal*(t.total_excl_church-lo)/10000)*100)} kr more than the lowest-tax area`:" — the lowest of the 25 areas"}. House buyers also pay 1.5% stamp duty; bostadsrätt buyers don't.</p>`; }
 
 /* ================= wiring ================= */
-let current="overview";
-function show(t){ current=t; document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t)); document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===t));
+let current="match"; let sigSub="news";
+const ALIAS={overview:"prices",news:"signals",corr:"signals",fc:"signals"};
+function show(t){ if(ALIAS[t]){ if(t!=="overview") sigSub=t; t=ALIAS[t]; } current=t; document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t)); document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===t));
   try{ if(location.hash!=="#"+t) history.replaceState(null,"","#"+t);}catch(e){} renderCurrent(); }
-function renderCurrent(){ try{ ({about:()=>{},overview:renderOverview,map:renderMap,match:renderMatchTab,areas:renderAreas,prices:renderPrices,news:renderNews,corr:renderCorr,fc:()=>renderForecast(false),data:renderSummary})[current](); }catch(e){ console.error(e); } }
+function renderCurrent(){ try{ banner(); }catch(e){} try{ ({about:()=>{},map:renderMap,match:renderMatchTab,areas:renderAreas,taxes:renderTaxes,prices:()=>{ renderOverview(); renderPrices(); },signals:renderSignals,data:renderSummary})[current](); }catch(e){ console.error(e); } }
 function refreshAll(){ banner(); renderCurrent(); if(current!=="data") renderSummary(); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
 document.querySelectorAll("[data-goto]").forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.goto);});
-window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(h&&h!==current&&$(h)&&$(h).tagName==="SECTION") show(h); });
+window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(h&&h!==current&&(ALIAS[h]||($(h)&&$(h).tagName==="SECTION"))) show(h); });
+function renderSignals(){ document.querySelectorAll("#sigTabs .chip").forEach(c=>c.classList.toggle("on",c.dataset.s===sigSub)); document.querySelectorAll("#signals .sigpane").forEach(d=>d.classList.toggle("on",d.id===sigSub));
+  ({news:renderNews,corr:renderCorr,fc:()=>renderForecast(false)})[sigSub](); }
+$("sigTabs").onclick=e=>{ const c=e.target.closest(".chip"); if(!c) return; sigSub=c.dataset.s; renderSignals(); };
 ["pMode","pFrom","pSmooth","pRate"].forEach(id=>$(id).onchange=renderPrices);
 $("aSort").onchange=renderAreas; $("tSalary").oninput=()=>{ renderTaxes(); renderAreaDetail(); };
 $("mMetric").onchange=renderMap; document.querySelectorAll("[data-z]").forEach(c=>c.onclick=()=>{ mZoom=c.dataset.z; document.querySelectorAll("[data-z]").forEach(x=>x.classList.toggle("on",x===c)); renderMap(); });
@@ -1307,7 +1329,7 @@ $("aliasSave").onclick=()=>{ const lines=$("aliasBox").value.split("\n").map(l=>
 
 /* ================= boot ================= */
 loadReal(); updRssVis();
-const h0=location.hash.slice(1); show(h0&&$(h0)&&$(h0).tagName==="SECTION"?h0:"overview"); renderSummary();
+const h0=location.hash.slice(1); show(h0&&(ALIAS[h0]||($(h0)&&$(h0).tagName==="SECTION"))?h0:"match"); renderSummary();
 initCaps();
 </script>
 </body>
