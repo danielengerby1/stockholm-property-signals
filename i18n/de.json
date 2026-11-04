@@ -768,6 +768,8 @@
 "BRF fees and health check": "BRF-Beiträge und Gesundheitscheck",
 "Industry averages and rules of thumb (HSB, Handelsbanken, Bostadsrätterna)": "Branchendurchschnitte und Faustregeln (HSB, Handelsbanken, Bostadsrätterna)",
 "Typical Stockholm fee per m²; thresholds for debt, savings, fee and rate sensitivity": "Typischer Beitrag pro m² in Stockholm; Schwellenwerte für Schulden, Sparen, Beitrag und Zinsempfindlichkeit",
+"Drag to move, scroll or pinch to zoom, tap an area for details. Colours show the selected measure; travel times are to T-Centralen.": "Ziehen zum Verschieben, scrollen oder zwei Finger zum Zoomen, tippe auf ein Gebiet für Details. Die Farben zeigen die gewählte Kennzahl; Fahrzeiten bis T-Centralen.",
+"Basemap © OpenStreetMap contributors, via OpenFreeMap (OpenMapTiles schema). Area borders: OpenStreetMap municipal boundaries and SCB RegSO small areas, cut to the shoreline.": "Basiskarte © OpenStreetMap-Mitwirkende, über OpenFreeMap (OpenMapTiles-Schema). Gebietsgrenzen: Gemeindegrenzen aus OpenStreetMap und RegSO-Kleinräume von SCB, an der Uferlinie zugeschnitten.",
 "__routes": {
 "Metro": "U-Bahn",
 "Bus": "Bus",

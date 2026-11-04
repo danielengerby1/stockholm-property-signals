@@ -41,6 +41,11 @@ Not yet included: counts of restaurants, bars and playgrounds from OpenStreetMap
 - Monthly cost model: loan = price × (1 − down payment, min 10%); amortisation 2% above 70% loan-to-value, 1% at 50–70% (Lag 2026:226, from 1 April 2026); interest deduction 30% up to 100 000 kr interest a year and 21% above; BRF fee default 830 kr/m²/year (Stockholm average); house running costs default 3 750 kr/month plus the capped property fee. Default rate 2.70% (median average 3-month rate, big banks, September 2026).
 - BRF health check thresholds (rules of thumb): debt < 5 000 kr/m² good, > 10 000 high; savings ≥ 150 kr/m² good, < 75 thin; fee 700–900 kr/m² normal; rate sensitivity < 5% good, > 10% high; energy < 100 kr/m² good, > 150 high.
 
+## Map
+
+- `map_basemap.json` — the vector basemap and area shapes used by the map tab, in projected integer units (1 unit = 0.0001° latitude; x scaled by cos 59.3°). Water, parks/forest, motorways/trunk/primary roads, rail and place names come from OpenStreetMap via OpenFreeMap vector tiles (zoom 12, OpenMapTiles schema). Municipal shapes are rebuilt from OpenStreetMap admin_level 7 boundaries; Stockholm's 12 districts are SCB RegSO small areas fitted to the OSM city boundary. Everything is clipped to land so borders follow the shoreline.
+- `build_map.py` — the script that produced it (shapely). Map data © OpenStreetMap contributors (ODbL).
+
 ## Refreshing the data
 Mäklarstatistik updates around the 8th of each month. Open their Stockholm page in a browser, paste `fetch_maklarstatistik.js` into the developer console and press Enter. The script downloads fresh CSV files, which you then drop into the app.
 
