@@ -46,6 +46,13 @@ Not yet included: counts of restaurants, bars and playgrounds from OpenStreetMap
 - `map_basemap.json` — the vector basemap and area shapes used by the map tab, in projected integer units (1 unit = 0.0001° latitude; x scaled by cos 59.3°). Water, parks/forest, motorways/trunk/primary roads, rail and place names come from OpenStreetMap via OpenFreeMap vector tiles (zoom 12, OpenMapTiles schema). Municipal shapes are rebuilt from OpenStreetMap admin_level 7 boundaries; Stockholm's 12 districts are SCB RegSO small areas fitted to the OSM city boundary. Everything is clipped to land so borders follow the shoreline.
 - `build_map.py` — the script that produced it (shapely). Map data © OpenStreetMap contributors (ODbL).
 
+## Explore neighbourhood (`explore/`)
+One file per area (`explore/<slug>.json`, 25 files, ~4.6 MB in total). The page loads a file only when that area is opened.
+- `pois`: `[category, x, y, name, OSM subclass]`, in the same projected units as the basemap. The category codes are c cafés & bakeries, g grocery, r restaurants & bars, p parks, y playgrounds, s schools, k preschools, f sports & swimming, h health & pharmacy, l library & culture, t stations.
+- `s` / `n`: SVG paths for secondary/tertiary and minor streets, clipped to the area.
+- Source: OpenFreeMap vector tiles (OpenMapTiles schema, © OpenStreetMap contributors). POIs come from the z14 `poi` layer and streets from `transportation`, assigned to areas with the land-clipped polygons in `map_basemap.json`. Built by `build_explore.py`. Per-area counts and km² are embedded in the page as `XIDX`.
+- Coverage follows OSM. Schools, preschools, parks, playgrounds and stations are well mapped; small shops and cafés are less complete.
+
 ## Refreshing the data
 Mäklarstatistik updates around the 8th of each month. Open their Stockholm page in a browser, paste `fetch_maklarstatistik.js` into the developer console and press Enter. The script downloads fresh CSV files, which you then drop into the app.
 

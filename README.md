@@ -1,6 +1,6 @@
-# Stockholm Property Signals
+# Stockholm Property Guide
 
-A single-page web app for analysing Stockholm housing prices at neighbourhood (stadsdel) level. It looks for links between price changes and local news, police incidents, planning and infrastructure, and macro factors such as the policy rate and mortgage rates. It then forecasts prices 6–24 months ahead.
+A single-page web app that helps people buying a home in Stockholm choose where to live. It matches areas to a buyer's budget, household and commute, shows what each neighbourhood is like and what is nearby, and works out monthly costs and taxes. Underneath it still tracks prices against news, police incidents, planning and interest rates, with a 6–24 month price forecast.
 
 Hosted version: https://claude.ai/artifact/P9oxqbjC66vXB5SqyMte3A
 
@@ -12,7 +12,10 @@ Hosted version: https://claude.ai/artifact/P9oxqbjC66vXB5SqyMte3A
 
 - **Map & commute:** a map of all 25 areas, coloured by price, travel time, income, families, schools or largest party. Shows distance and travel time to T-Centralen by public transport, car and bike.
 - **Where should I live?:** an English matcher. Enter budget, size, household, home type, commute mode and priorities, and get the areas ranked with reasons for each.
-- **Neighbourhoods:** detailed profiles with official statistics, the 2026 election and a written overview.
+- **Neighbourhoods:** two sub-sections.
+  - *Area guide:* detailed profiles with official statistics, the 2026 election and a written overview.
+  - *Explore neighbourhood:* a street-level map of one area with ~18,000 OpenStreetMap places: cafés, grocery stores, restaurants, parks, playgrounds, schools, preschools, sports and swimming, health, culture and stations. Categories can be toggled, markers cluster when zoomed out, and each category is compared per 1,000 residents with the average of the 25 areas.
+- **Languages:** English, Swedish, French and German.
 
 ## Data inputs
 The data is imported as files. The page doesn't fetch any websites itself.
